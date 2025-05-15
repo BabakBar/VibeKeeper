@@ -4,7 +4,7 @@
 
 ## 1. Introduction
 
-**Concept:** Capture and organize gift ideas and important dates (birthdays, anniversaries, occasions) for friends and family via voice or text. AI extracts recipient, gift idea, occasion/date, tags, budget, and notes. Track occasions and perfect presents.
+**Concept:** Capture and organize gift ideas and important dates (birthdays, anniversaries, occasions) for friends and family via voice or text. AI extracts recipient, gift idea, occasion/date, tags, budget, and notes. Track occasions and perfect presents, and get reminders when it's time to buy a gift or say happy birthday.
 
 User/Creator: I have many friends and family members, all over the world. I want to keep track of their birthdays and special occasions, and I often have gift ideas that I want to remember. I need a simple way to capture these ideas and get reminders when the time comes.
 I want to be able to search for gift ideas by recipient, occasion, or tags. I also want to be able to set reminders for upcoming occasions and get notifications when it's time to buy a gift. when i want to travel and want to buy gifts for my friends and family, I want to be able to see all the gift ideas I have for them in one place. I also want to be able to see how much I've spent on gifts for each person, so I can stay within my budget.
@@ -18,7 +18,7 @@ I want to be able to search for gift ideas by recipient, occasion, or tags. I al
 **Key Features:**
 
 - Multi-modal capture (voice, text, photo)
-- Structured JSON output: `{ recipient, idea, occasion, date, tags, budget }`
+- Structured JSON output: `{ recipient, idea, occasion, date, tags, budget }` | get as much data as possible.
 - Search by recipient, occasion, budget, or tag
 - Reminder management with push notifications
 - Budget tracking for gift spending
@@ -28,7 +28,7 @@ I want to be able to search for gift ideas by recipient, occasion, or tags. I al
 
 **Target Audience:** Thoughtful gift-givers, planners, and busy individuals who want to track ideas and never miss a deadline.
 
-**Origin:** Derived from the FabrikTakt core concept of "AI-powered capture, structuring, and retrieval of information" ([microsaas.md](microsaas.md)).
+**Origin:** Derived from the FabrikTakt core concept of "AI-powered capture, structuring, and retrieval of information".
 
 ---
 
@@ -47,7 +47,7 @@ I want to be able to search for gift ideas by recipient, occasion, or tags. I al
 
 ## 3. System Architecture
 
-- Reuse FabrikTakt pipeline components:
+- Reuse FabrikTakt pipeline components but with a different approach and modifications:
   - Ingestion API
   - Pre-processing (Whisper for voice, Vision for images)
   - AI Orchestration (LLM for entity extraction)
@@ -61,12 +61,12 @@ I want to be able to search for gift ideas by recipient, occasion, or tags. I al
    - Swift UI frontend
    - Local SQLite + iCloud sync
    - iOS-native notifications & widgets
-   - SiriKit integration for voice capture
+   - SiriKit integration for voice capture or better AI models, like OpenAI's Whisper or Gemini 2.0.
 2. **Backend Services (Phase 1-2):**
    - FastAPI backend on cloud
    - Postgres for structured data
    - S3/equivalent for media
-   - Redis for caching & task queue
+   - Valkey for caching & task queue
 3. **Android App (Phase 2):**
    - Kotlin/Jetpack Compose frontend
    - Firebase integration
@@ -83,6 +83,7 @@ I want to be able to search for gift ideas by recipient, occasion, or tags. I al
 ### Core Entities
 
 #### User
+
 ```json
 {
   "id": "UUID",
@@ -91,7 +92,7 @@ I want to be able to search for gift ideas by recipient, occasion, or tags. I al
   "preferences": {
     "notificationLeadTime": "Int",
     "defaultBudgetRange": [25, 100],
-    "preferredNotificationChannels": ["push", "email", "telegram"]
+    "preferredNotificationChannels": ["push", "email"]
   },
   "created_at": "DateTime",
   "updated_at": "DateTime"
@@ -99,6 +100,7 @@ I want to be able to search for gift ideas by recipient, occasion, or tags. I al
 ```
 
 #### Contact/Recipient
+
 ```json
 {
   "id": "UUID",
@@ -118,6 +120,7 @@ I want to be able to search for gift ideas by recipient, occasion, or tags. I al
 ```
 
 #### GiftIdea
+
 ```json
 {
   "id": "UUID",
@@ -141,6 +144,7 @@ I want to be able to search for gift ideas by recipient, occasion, or tags. I al
 ```
 
 #### Reminder
+
 ```json
 {
   "id": "UUID",
@@ -249,7 +253,7 @@ User input: {userInput}
 
 ### Error Handling & Fallbacks
 
-- **Incomplete Extraction:** If key fields (recipient, idea) can't be extracted, prompt user for clarification
+- **Incomplete Extraction:** If key fields (recipient, date) can't be extracted, prompt user for clarification
 - **Date Parsing:** Ask for explicit confirmation if date is ambiguous
 - **Budget Parsing:** Handle currency symbols, ranges, and approximate values ("around $50")
 - **Confidence Scoring:** Include confidence level for each extracted entity
@@ -272,7 +276,6 @@ User input: {userInput}
 
 - **iOS Push Notifications:** Primary channel for Phase 1
 - **Email:** Secondary channel for important reminders
-- **Telegram Integration:** Optional, leveraging FabrikTakt's bot framework
 - **iOS Widgets:** At-a-glance upcoming occasions
 - **Apple Watch Integration:** Quick capture and timely reminders
 
@@ -331,7 +334,7 @@ User input: {userInput}
 ### iOS App Infrastructure
 
 - Swift UI + Combine for reactive UI
-- Core Data for local persistence
+- Swift Data for local persistence
 - CloudKit for iCloud sync
 - App Extensions:
   - Share extension for quick capture
@@ -342,8 +345,8 @@ User input: {userInput}
 
 - **Compute:** FastAPI on Docker containers; scalable cloud functions for AI
 - **Storage:** Postgres with JSON; S3/equivalent for media
-- **Caching & Queue:** Redis for caching; Redis/RabbitMQ for task queue
-- **AI Services:** OpenAI API/Equivalent; reuse FabrikTakt's AI orchestration
+- **Caching & Queue:** Valkey for caching; Redis/RabbitMQ for task queue
+- **AI Services:** OpenAI API/Equivalent; AI orchestration
 
 ### Authentication & Security
 
@@ -355,7 +358,7 @@ User input: {userInput}
 
 ### Monitoring & Logging
 
-- Centralized logging (from FabrikTakt)
+- Centralized logging
 - Performance monitoring
 - Error tracking
 - Usage analytics
@@ -369,7 +372,7 @@ User input: {userInput}
 - Core capture & entity extraction
 - Basic recipient management
 - Simple reminders & notifications
-- Local persistence with iCloud sync
+- Local persistence Swift Data with iCloud sync
 - Essential AI functions
 
 ### Phase 2: Backend & Android (3 months)
@@ -390,9 +393,10 @@ User input: {userInput}
 
 - Price Tracking: API integrations for price tracking
 - Social Recommendations: Opt-in sharing of anonymized gift ideas
-- AR Integration: Visualize gifts in space
 - Group Gifting: Coordinate shared gifts
 - Import from Contacts: Auto-import birthdays and dates
+- affiliate links for gift ideas
+- Gift history analytics: Spending trends, popular gifts
 
 ---
 
@@ -400,8 +404,8 @@ User input: {userInput}
 
 This project leverages FabrikTakt platform components:
 
-1. **Core AI Pipeline:** Capture-structure-retrieve pattern ([microsaas.md](microsaas.md))
-2. **Prompt Engineering:** Entity extraction techniques
+1. **Core AI Pipeline:** Capture-structure-retrieve pattern
+2. **Prompt Engineering:** Entity extraction techniques using xml format
 3. **Backend Infrastructure:** Modular API architecture
 4. **Storage Patterns:** Structured/unstructured storage approach
 

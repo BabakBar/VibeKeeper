@@ -3,16 +3,16 @@
 
 ## 1. Project Overview & Architecture
 
-VibeKeeper is an iOS-first app for capturing and managing gift ideas and important occasions, with AI-powered entity extraction. This implementation will leverage core components from the FabrikTakt project while adapting them to the specific requirements of VibeKeeper.
+VibeKeeper is an iOS-first app for capturing and managing gift ideas and important occasions, with AI-powered entity extraction.
 
 ### System Architecture Overview
 
 ```
 +-------------------+          +--------------------+          +------------------+
 |                   |          |                    |          |                  |
-| iOS Client        |<-------->| FastAPI Backend   |<-------->| PostgreSQL DB    |
-| (SwiftUI)         |  REST    | (Reused from      |  SQL     | (Similar schema  |
-|                   |  API     | FabrikTakt)       |          | to FabrikTakt)   |
+| iOS Client        |<-------->| FastAPI Backend    |<-------->| PostgreSQL DB     |
+| (SwiftUI)         |  REST    |                    |  SQL     |                  |
+|                   |  API     |                    |          |                  |
 +-------------------+          +--------------------+          +------------------+
                                       ^      ^
                                       |      |
@@ -21,12 +21,12 @@ VibeKeeper is an iOS-first app for capturing and managing gift ideas and importa
                     +----------v----------+ +---------v--------+
                     |                     | |                  |
                     | LLM Service         | | Storage Service  |
-                    | (Adapted from       | | (S3/equivalent   |
-                    | FabrikTakt's AI)    | | for media files) |
+                    |                     | | (S3/equivalent   |
+                    |                     | | for media files) |
                     +---------------------+ +------------------+
 ```
 
-## 2. Reusable FabrikTakt Components
+## 2. Reusable Components but with Modifications
 
 ### Core Backend Components
 
@@ -1366,7 +1366,7 @@ class CaptureViewModel: ObservableObject {
 ### Phase 1: Core Backend Setup (2 weeks)
 
 1. **Week 1: Initial Setup**
-   - Set up project structure based on FabrikTakt
+   - Set up project structure based on best practices
    - Configure FastAPI application with middleware
    - Set up SQLAlchemy and Alembic
    - Configure JWT authentication
@@ -1381,7 +1381,7 @@ class CaptureViewModel: ObservableObject {
 ### Phase 2: AI Integration (2 weeks)
 
 3. **Week 3: Entity Extraction Pipeline**
-   - Adapt FabrikTakt's AI client for gift idea extraction
+   - AI client for gift idea extraction
    - Implement text processing and entity extraction
    - Create prompt templates and response parsing
    - Set up validation mechanisms
@@ -1423,12 +1423,13 @@ class CaptureViewModel: ObservableObject {
 
 ### Phase 5: Integration & Testing (2 weeks)
 
-11. **Weeks 11-12: Testing & Refinement**
-   - End-to-end testing of core workflows
-   - Performance optimization
-   - Security review
-   - Bug fixes and refinements
-   - Prepare for initial release
+1. **Weeks 11-12: Testing & Refinement**
+
+- End-to-end testing of core workflows
+- Performance optimization
+- Security review
+- Bug fixes and refinements
+- Prepare for initial release
 
 ## 6. Key Implementation Considerations
 
@@ -1462,4 +1463,4 @@ class CaptureViewModel: ObservableObject {
    - UI tests for critical user flows
    - Performance and load testing
 
-This implementation specification provides a detailed roadmap for developing the VibeKeeper app by leveraging your existing FabrikTakt codebase. The approach focuses on reusing core components while adapting them to the specific requirements of VibeKeeper and adding new features for gift idea management, multi-modal capture, and iOS-specific functionality.
+This implementation specification provides a detailed roadmap for developing the VibeKeeper app by leveraging your existing open source/free tech stack. The approach focuses on reusing core components while adapting them to the specific requirements of VibeKeeper and adding new features for gift idea management, multi-modal capture, and iOS-specific functionality.

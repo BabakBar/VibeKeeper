@@ -1,0 +1,41 @@
+{
+  "classification_schema": {
+    "type": ["implementation", "interface", "test", "configuration", "documentation", "resource"],
+    "domain": ["model", "view", "viewmodel", "service", "utility", "extension"],
+    "lifecycle_stage": ["initialized", "in_development", "stable", "deprecated"]
+  },
+  "files": {
+    "VibeKeeper/VibeKeeperApp.swift": {
+      "type": "implementation",
+      "domain": "view",
+      "lifecycle_stage": "initialized",
+      "description": "Main entry point for the SwiftUI application",
+      "dependencies": [],
+      "interfaces": ["App"]
+    },
+    "VibeKeeper/ContentView.swift": {
+      "type": "implementation",
+      "domain": "view",
+      "lifecycle_stage": "initialized", 
+      "description": "Main content view of the application",
+      "dependencies": [],
+      "interfaces": ["View"]
+    },
+    "docs/VibeKeeper.md": {
+      "type": "documentation",
+      "domain": null,
+      "lifecycle_stage": "stable",
+      "description": "Technical specification document for the VibeKeeper project",
+      "dependencies": [],
+      "interfaces": []
+    },
+    "docs/VibeKeeper-spec.md": {
+      "type": "documentation",
+      "domain": null,
+      "lifecycle_stage": "stable",
+      "description": "Implementation specification document for the VibeKeeper project",
+      "dependencies": [],
+      "interfaces": []
+    }
+  }
+}
