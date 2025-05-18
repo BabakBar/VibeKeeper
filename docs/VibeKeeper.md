@@ -4,7 +4,7 @@
 
 ## 1. Introduction
 
-**Concept:** Capture and organize gift ideas and important dates (birthdays, anniversaries, occasions) for friends and family via voice or text. AI extracts recipient, gift idea, occasion/date, tags, budget, and notes. Track occasions and perfect presents, and get reminders when it's time to buy a gift or say happy birthday.
+**Concept:** Capture and organize gift ideas and important dates (birthdays, anniversaries, occasions) for friends and family via voice or text. AI extracts recipient, gift idea, occasion/date, tags, budget, and notes. Track occasions and perfect presents, and get reminders when it's time to buy a gift or say happy birthday. This app is about keeping/sharing positive experiences.
 
 User/Creator: I have many friends and family members, all over the world. I want to keep track of their birthdays and special occasions, and I often have gift ideas that I want to remember. I need a simple way to capture these ideas and get reminders when the time comes.
 I want to be able to search for gift ideas by recipient, occasion, or tags. I also want to be able to set reminders for upcoming occasions and get notifications when it's time to buy a gift. when i want to travel and want to buy gifts for my friends and family, I want to be able to see all the gift ideas I have for them in one place. I also want to be able to see how much I've spent on gifts for each person, so I can stay within my budget.

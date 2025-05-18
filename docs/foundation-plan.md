@@ -6,12 +6,11 @@ This document outlines the foundational steps for building the VibeKeeper iOS ap
 
 - **Goal:** Establish a clean and manageable Git repository.
 - **Steps:**
-  - Initialize the Git repository if not already done.
+  - Git repository is done with master branch.
   - Define the branching strategy:
-    - `main`: Production releases.
+    - `master`: Production releases.
     - `develop`: Integration branch for features, latest development version.
     - `feature/<feature-name>`: For new feature development.
-    - `bugfix/<issue-id>`: For bug fixes.
     - `release/<version>`: For release preparation.
   - Ensure `.gitignore` is configured for Xcode and Swift projects (e.g., ignoring `xcuserdata`, `DerivedData`, `.DS_Store`).
 
