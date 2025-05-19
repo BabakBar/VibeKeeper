@@ -11,12 +11,14 @@ struct AppTabView: View {
     @StateObject private var reminderViewModel: ReminderViewModel
     
     init() {
-        // Initialize ViewModels with the model context
-        let context = try! ModelContainer(for: GiftIdea.self, Contact.self, Occasion.self, Reminder.self).mainContext
-        self._giftViewModel = StateObject(wrappedValue: GiftViewModel(modelContext: context))
-        self._contactViewModel = StateObject(wrappedValue: ContactViewModel(modelContext: context))
-        self._occasionViewModel = StateObject(wrappedValue: OccasionViewModel(modelContext: context))
-        self._reminderViewModel = StateObject(wrappedValue: ReminderViewModel(modelContext: context))
+        // Note: Model context will be obtained from the environment once the view is instantiated
+        // For Preview purposes, we'll initialize with a placeholder context
+        // The actual context will be set in the onAppear modifier
+        let previewContext = try! ModelContainer(for: GiftIdea.self, Contact.self, Occasion.self, Reminder.self).mainContext
+        self._giftViewModel = StateObject(wrappedValue: GiftViewModel(modelContext: previewContext))
+        self._contactViewModel = StateObject(wrappedValue: ContactViewModel(modelContext: previewContext))
+        self._occasionViewModel = StateObject(wrappedValue: OccasionViewModel(modelContext: previewContext))
+        self._reminderViewModel = StateObject(wrappedValue: ReminderViewModel(modelContext: previewContext))
     }
     
     var body: some View {
@@ -27,6 +29,13 @@ struct AppTabView: View {
                 AuthenticationView()
                     .environmentObject(authViewModel)
             }
+        }
+        .onAppear {
+            // Update ViewModels with the actual model context from the environment
+            giftViewModel.updateModelContext(modelContext)
+            contactViewModel.updateModelContext(modelContext)
+            occasionViewModel.updateModelContext(modelContext)
+            reminderViewModel.updateModelContext(modelContext)
         }
     }
     
@@ -66,27 +75,7 @@ struct AppTabView: View {
     }
 }
 
-// Placeholder views - these will be implemented in separate files
-// HomeView is already implemented in Features/Home/Views/HomeView.swift
-
-struct GiftListView: View {
-    var body: some View {
-        NavigationView {
-            Text("Gift Ideas")
-                .navigationTitle("Gift Ideas")
-        }
-    }
-}
-
-struct ContactListView: View {
-    var body: some View {
-        NavigationView {
-            Text("Contacts")
-                .navigationTitle("Contacts")
-        }
-    }
-}
-
+// Only keep the SettingsView as a placeholder
 struct SettingsView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
     

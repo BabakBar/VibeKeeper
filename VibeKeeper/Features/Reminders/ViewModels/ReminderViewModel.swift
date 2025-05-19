@@ -21,6 +21,11 @@ class ReminderViewModel: ObservableObject {
         self.checkNotificationPermission()
     }
     
+    func updateModelContext(_ newModelContext: ModelContext) {
+        self.modelContext = newModelContext
+        self.loadReminders()
+    }
+    
     func loadReminders() {
         isLoading = true
         

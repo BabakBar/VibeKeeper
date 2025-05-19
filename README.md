@@ -65,11 +65,16 @@ See the [Development Guide](docs/development-guide.md) for more details.
 - MVVM architecture
 - Basic UI theming
 - Authentication with Apple
+- Tab-based navigation structure
+- SwiftData integration with environment
+- Gift List view implementation
+- Contact List view implementation
 
 ### In Progress
-- Gift management views
-- Contact management views
-- Reminder system
+- Gift form view for creation and editing
+- Contact form view for creation and editing
+- Reminder system implementation
+- Data persistence testing
 
 ### Planned
 - AI-powered information extraction

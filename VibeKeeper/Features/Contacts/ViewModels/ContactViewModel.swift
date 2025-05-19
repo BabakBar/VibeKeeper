@@ -18,6 +18,11 @@ class ContactViewModel: ObservableObject {
         self.loadContacts()
     }
     
+    func updateModelContext(_ newModelContext: ModelContext) {
+        self.modelContext = newModelContext
+        self.loadContacts()
+    }
+    
     func loadContacts() {
         isLoading = true
         

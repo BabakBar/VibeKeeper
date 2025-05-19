@@ -18,6 +18,11 @@ class GiftViewModel: ObservableObject {
         self.loadGifts()
     }
     
+    func updateModelContext(_ newModelContext: ModelContext) {
+        self.modelContext = newModelContext
+        self.loadGifts()
+    }
+    
     func loadGifts() {
         isLoading = true
         
@@ -76,5 +81,16 @@ class GiftViewModel: ObservableObject {
     
     func unpurchasedGifts() -> [GiftIdea] {
         return gifts.filter { !$0.isPurchased }
+    }
+    
+    func togglePurchased(_ gift: GiftIdea) {
+        gift.isPurchased.toggle()
+        
+        do {
+            try modelContext.save()
+            loadGifts()
+        } catch {
+            errorMessage = "Failed to update purchase status: \(error.localizedDescription)"
+        }
     }
 }

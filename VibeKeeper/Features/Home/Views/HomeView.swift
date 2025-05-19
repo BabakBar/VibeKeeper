@@ -1,5 +1,6 @@
 // VibeKeeper/Features/Home/Views/HomeView.swift
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel

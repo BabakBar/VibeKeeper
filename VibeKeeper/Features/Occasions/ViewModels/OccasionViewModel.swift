@@ -18,6 +18,11 @@ class OccasionViewModel: ObservableObject {
         self.loadOccasions()
     }
     
+    func updateModelContext(_ newModelContext: ModelContext) {
+        self.modelContext = newModelContext
+        self.loadOccasions()
+    }
+    
     func loadOccasions() {
         isLoading = true
         
