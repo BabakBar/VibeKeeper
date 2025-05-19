@@ -5,14 +5,14 @@ import SwiftData
 @Model
 final class GiftIdea {
     @Attribute(.unique) var id: UUID
-    var name: String
-    var descriptionText: String?
-    var price: Double?
-    var sourceURL: String?
-    var photoPath: String?
-    var isPurchased: Bool
-    var createdAt: Date
-    var updatedAt: Date
+    @Attribute var name: String
+    @Attribute var descriptionText: String?
+    @Attribute var price: Double?
+    @Attribute var sourceURL: String?
+    @Attribute var photoPath: String?
+    @Attribute var isPurchased: Bool
+    @Attribute var createdAt: Date
+    @Attribute var updatedAt: Date
 
     // Relationships
     @Relationship(deleteRule: .cascade, inverse: \Contact.giftIdeas)

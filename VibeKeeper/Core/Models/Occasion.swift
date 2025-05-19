@@ -5,12 +5,12 @@ import SwiftData
 @Model
 final class Occasion {
     @Attribute(.unique) var id: UUID
-    var name: String
-    var date: Date
-    var isRecurring: Bool
-    var notes: String?
-    var createdAt: Date
-    var updatedAt: Date
+    @Attribute var name: String
+    @Attribute var date: Date
+    @Attribute var isRecurring: Bool
+    @Attribute var notes: String?
+    @Attribute var createdAt: Date
+    @Attribute var updatedAt: Date
     
     // Relationships
     @Relationship(deleteRule: .nullify, inverse: \GiftIdea.occasion)

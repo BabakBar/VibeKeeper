@@ -5,13 +5,13 @@ import SwiftData
 @Model
 final class Contact {
     @Attribute(.unique) var id: UUID
-    var firstName: String
-    var lastName: String?
-    var relationship: String?
-    var notes: String?
-    var birthday: Date?
-    var createdAt: Date
-    var updatedAt: Date
+    @Attribute var firstName: String
+    @Attribute var lastName: String?
+    @Attribute var relationship: String?
+    @Attribute var notes: String?
+    @Attribute var birthday: Date?
+    @Attribute var createdAt: Date
+    @Attribute var updatedAt: Date
 
     // Relationships
     @Relationship(deleteRule: .cascade, inverse: \GiftIdea.contact)

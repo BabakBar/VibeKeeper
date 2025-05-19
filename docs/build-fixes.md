@@ -5,6 +5,7 @@
 1. **SwiftData Model Annotations**
    - Verified all model classes have `@Model` annotations
    - Confirmed proper import of `SwiftData` in all model files
+   - Added `@Attribute` annotations to ALL properties
    - Fixed relationship annotations
 
 2. **Import Statements**
@@ -21,6 +22,12 @@
      - Creates a minimal ModelContainer for previews
      - Uses the app's shared ModelContainer via environment in actual usage
      - Added updateModelContext method to ViewModels to update the context when the view appears
+
+5. **SwiftData Relationships**
+   - Changed optional arrays to non-optional arrays with empty default values (`[]`)
+   - Updated UI code to handle non-optional collections
+   - Fixed circular reference issues in relationship macros
+   - Cleaned Xcode derived data to resolve persistent circular macro errors
 
 ## Implementation Details
 

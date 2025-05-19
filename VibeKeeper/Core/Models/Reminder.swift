@@ -5,12 +5,12 @@ import SwiftData
 @Model
 final class Reminder {
     @Attribute(.unique) var id: UUID
-    var title: String
-    var reminderDate: Date
-    var notes: String?
-    var isCompleted: Bool
-    var createdAt: Date
-    var updatedAt: Date
+    @Attribute var title: String
+    @Attribute var reminderDate: Date
+    @Attribute var notes: String?
+    @Attribute var isCompleted: Bool
+    @Attribute var createdAt: Date
+    @Attribute var updatedAt: Date
 
     // Relationships
     @Relationship(deleteRule: .nullify)
