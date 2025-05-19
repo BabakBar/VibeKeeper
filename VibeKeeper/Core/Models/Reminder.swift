@@ -12,7 +12,12 @@ final class Reminder {
     var createdAt: Date
     var updatedAt: Date
 
-    // var occasion: Occasion? // Link to an occasion
+    // Relationships
+    @Relationship(deleteRule: .nullify)
+    var occasion: Occasion?
+    
+    @Relationship(deleteRule: .nullify)
+    var giftIdea: GiftIdea?
 
     init(id: UUID = UUID(), title: String = "", reminderDate: Date = Date(), notes: String? = nil, isCompleted: Bool = false, createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.id = id

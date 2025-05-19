@@ -13,9 +13,12 @@ final class Contact {
     var createdAt: Date
     var updatedAt: Date
 
-    // Example of a potential relationship
-    // @Relationship(deleteRule: .cascade, inverse: \GiftIdea.contact)
-    // var giftIdeas: [GiftIdea]? = []
+    // Relationships
+    @Relationship(deleteRule: .cascade, inverse: \GiftIdea.contact)
+    var giftIdeas: [GiftIdea]? = []
+    
+    @Relationship(deleteRule: .cascade, inverse: \Occasion.contact)
+    var occasions: [Occasion]? = []
 
     init(id: UUID = UUID(), firstName: String = "", lastName: String? = nil, relationship: String? = nil, notes: String? = nil, birthday: Date? = nil, createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.id = id

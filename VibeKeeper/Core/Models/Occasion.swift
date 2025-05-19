@@ -11,6 +11,13 @@ final class Occasion {
     var notes: String?
     var createdAt: Date
     var updatedAt: Date
+    
+    // Relationships
+    @Relationship(deleteRule: .nullify, inverse: \GiftIdea.occasion)
+    var giftIdeas: [GiftIdea]? = []
+    
+    @Relationship(deleteRule: .nullify, inverse: \Contact.occasions)
+    var contact: Contact?
 
     init(id: UUID = UUID(), name: String = "", date: Date = Date(), isRecurring: Bool = false, notes: String? = nil, createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.id = id

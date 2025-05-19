@@ -2,8 +2,23 @@
 import SwiftUI
 
 extension Color {
+    // Primary brand color
     static let persianGreen = Color(hex: "#00A693")
-    // Add other theme-specific colors here
+    
+    // Supporting colors
+    static let lightGreen = Color(hex: "#A0E4D7")
+    static let darkGreen = Color(hex: "#008578")
+    
+    // Neutral colors
+    static let background = Color(hex: "#F7F9FA")
+    static let cardBackground = Color.white
+    static let textPrimary = Color(hex: "#28303F")
+    static let textSecondary = Color(hex: "#687180")
+    
+    // Status colors
+    static let success = Color(hex: "#2CCC71")
+    static let warning = Color(hex: "#F39C12")
+    static let error = Color(hex: "#E74C3C")
 }
 
 extension Color {

@@ -14,9 +14,12 @@ final class GiftIdea {
     var createdAt: Date
     var updatedAt: Date
 
-    // Relationships (to be fully defined with inverse if needed)
-    // var contact: Contact?
-    // var occasion: Occasion?
+    // Relationships
+    @Relationship(deleteRule: .cascade, inverse: \Contact.giftIdeas)
+    var contact: Contact?
+    
+    @Relationship(deleteRule: .nullify)
+    var occasion: Occasion?
 
     init(id: UUID = UUID(), name: String = "", descriptionText: String? = nil, price: Double? = nil, sourceURL: String? = nil, photoPath: String? = nil, isPurchased: Bool = false, createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.id = id
