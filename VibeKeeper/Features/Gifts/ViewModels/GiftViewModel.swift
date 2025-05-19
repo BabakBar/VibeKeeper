@@ -68,11 +68,21 @@ class GiftViewModel: ObservableObject {
     }
     
     func giftsByContact(_ contact: Contact) -> [GiftIdea] {
-        return gifts.filter { $0.contact?.id == contact.id }
+        return gifts.filter { gift in 
+            if let giftContact = gift.contact {
+                return giftContact.id == contact.id
+            }
+            return false
+        }
     }
     
     func giftsByOccasion(_ occasion: Occasion) -> [GiftIdea] {
-        return gifts.filter { $0.occasion?.id == occasion.id }
+        return gifts.filter { gift in 
+            if let giftOccasion = gift.occasion {
+                return giftOccasion.id == occasion.id
+            }
+            return false
+        }
     }
     
     func purchasedGifts() -> [GiftIdea] {

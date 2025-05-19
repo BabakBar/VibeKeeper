@@ -186,7 +186,8 @@ struct ContactRowView: View {
                 
                 Spacer()
                 
-                if let giftCount = contact.giftIdeas?.count, giftCount > 0 {
+                let giftCount = contact.giftIdeas.count
+                if giftCount > 0 {
                     Text("\(giftCount) gift\(giftCount == 1 ? "" : "s")")
                         .font(.caption)
                         .padding(6)
@@ -306,8 +307,8 @@ struct ContactDetailView: View {
                     Text("Gift Ideas")
                         .font(.headline)
                     
-                    if let gifts = contact.giftIdeas, !gifts.isEmpty {
-                        ForEach(gifts) { gift in
+                    if !contact.giftIdeas.isEmpty {
+                        ForEach(contact.giftIdeas) { gift in
                             HStack {
                                 VStack(alignment: .leading) {
                                     Text(gift.name)

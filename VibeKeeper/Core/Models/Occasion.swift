@@ -14,7 +14,7 @@ final class Occasion {
     
     // Relationships
     @Relationship(deleteRule: .nullify, inverse: \GiftIdea.occasion)
-    var giftIdeas: [GiftIdea]? = []
+    var giftIdeas: [GiftIdea] = []
     
     @Relationship(deleteRule: .nullify, inverse: \Contact.occasions)
     var contact: Contact?
