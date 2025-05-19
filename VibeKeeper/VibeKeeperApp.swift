@@ -13,10 +13,10 @@ import SwiftData
 struct VibeKeeperApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            GiftIdea.self,
-            Contact.self,
-            Occasion.self,
-            Reminder.self,
+            GiftModel.self,
+            ContactModel.self,
+            OccasionModel.self,
+            ReminderModel.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {

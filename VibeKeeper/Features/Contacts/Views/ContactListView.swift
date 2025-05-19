@@ -393,7 +393,7 @@ struct ContactDetailView: View {
     context.insert(gift1)
     context.insert(gift2)
     
-    return ContactListView()
+    ContactListView()
         .environmentObject(ContactViewModel(modelContext: context))
         .environmentObject(GiftViewModel(modelContext: context))
         .modelContainer(previewContainer)

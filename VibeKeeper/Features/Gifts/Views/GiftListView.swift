@@ -307,7 +307,7 @@ struct GiftDetailView: View {
     context.insert(gift1)
     context.insert(gift2)
     
-    return GiftListView()
+    GiftListView()
         .environmentObject(GiftViewModel(modelContext: context))
         .environmentObject(ContactViewModel(modelContext: context))
         .modelContainer(previewContainer)
