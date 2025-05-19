@@ -14,7 +14,7 @@ struct AppTabView: View {
         // Note: Model context will be obtained from the environment once the view is instantiated
         // For Preview purposes, we'll initialize with a placeholder context
         // The actual context will be set in the onAppear modifier
-        let previewContext = try! ModelContainer(for: GiftIdea.self, Contact.self, Occasion.self, Reminder.self).mainContext
+        let previewContext = try! ModelContainer(for: GiftModel.self, ContactModel.self, OccasionModel.self, ReminderModel.self).mainContext
         self._giftViewModel = StateObject(wrappedValue: GiftViewModel(modelContext: previewContext))
         self._contactViewModel = StateObject(wrappedValue: ContactViewModel(modelContext: previewContext))
         self._occasionViewModel = StateObject(wrappedValue: OccasionViewModel(modelContext: previewContext))
@@ -97,5 +97,7 @@ struct SettingsView: View {
 }
 
 #Preview {
-    AppTabView()
+    let container = try! ModelContainer(for: GiftModel.self, ContactModel.self, OccasionModel.self, ReminderModel.self)
+    return AppTabView()
+        .modelContainer(container)
 }

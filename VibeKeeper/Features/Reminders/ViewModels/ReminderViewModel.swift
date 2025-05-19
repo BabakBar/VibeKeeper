@@ -7,7 +7,7 @@ import UserNotifications
 
 @MainActor
 class ReminderViewModel: ObservableObject {
-    @Published var reminders: [Reminder] = []
+    @Published var reminders: [ReminderModel] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var notificationPermissionGranted: Bool = false
@@ -30,7 +30,7 @@ class ReminderViewModel: ObservableObject {
         isLoading = true
         
         do {
-            let descriptor = FetchDescriptor<Reminder>(sortBy: [SortDescriptor(\.reminderDate)])
+            let descriptor = FetchDescriptor<ReminderModel>(sortBy: [SortDescriptor(\.reminderDate)])
             reminders = try modelContext.fetch(descriptor)
             isLoading = false
         } catch {
@@ -39,7 +39,7 @@ class ReminderViewModel: ObservableObject {
         }
     }
     
-    func addReminder(_ reminder: Reminder) {
+    func addReminder(_ reminder: ReminderModel) {
         modelContext.insert(reminder)
         
         do {
@@ -51,7 +51,7 @@ class ReminderViewModel: ObservableObject {
         }
     }
     
-    func updateReminder(_ reminder: Reminder) {
+    func updateReminder(_ reminder: ReminderModel) {
         do {
             try modelContext.save()
             loadReminders()
@@ -61,7 +61,7 @@ class ReminderViewModel: ObservableObject {
         }
     }
     
-    func deleteReminder(_ reminder: Reminder) {
+    func deleteReminder(_ reminder: ReminderModel) {
         modelContext.delete(reminder)
         
         do {
@@ -73,23 +73,23 @@ class ReminderViewModel: ObservableObject {
         }
     }
     
-    func markAsCompleted(_ reminder: Reminder) {
+    func markAsCompleted(_ reminder: ReminderModel) {
         reminder.isCompleted = true
         updateReminder(reminder)
         cancelNotification(for: reminder)
     }
     
-    func upcomingReminders() -> [Reminder] {
+    func upcomingReminders() -> [ReminderModel] {
         return reminders.filter { !$0.isCompleted && $0.reminderDate > Date() }
             .sorted { $0.reminderDate < $1.reminderDate }
     }
     
-    func overdueReminders() -> [Reminder] {
+    func overdueReminders() -> [ReminderModel] {
         return reminders.filter { !$0.isCompleted && $0.reminderDate <= Date() }
             .sorted { $0.reminderDate < $1.reminderDate }
     }
     
-    func completedReminders() -> [Reminder] {
+    func completedReminders() -> [ReminderModel] {
         return reminders.filter { $0.isCompleted }
             .sorted { $0.reminderDate > $1.reminderDate }
     }
@@ -115,7 +115,7 @@ class ReminderViewModel: ObservableObject {
         }
     }
     
-    private func scheduleNotification(for reminder: Reminder) {
+    private func scheduleNotification(for reminder: ReminderModel) {
         guard notificationPermissionGranted, !reminder.isCompleted else { return }
         
         let content = UNMutableNotificationContent()
@@ -148,13 +148,13 @@ class ReminderViewModel: ObservableObject {
         }
     }
     
-    private func updateNotification(for reminder: Reminder) {
+    private func updateNotification(for reminder: ReminderModel) {
         // Cancel existing notification and schedule a new one
         cancelNotification(for: reminder)
         scheduleNotification(for: reminder)
     }
     
-    private func cancelNotification(for reminder: Reminder) {
+    private func cancelNotification(for reminder: ReminderModel) {
         let identifier = "reminder-\(reminder.id.uuidString)"
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
     }

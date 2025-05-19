@@ -6,7 +6,7 @@ import Combine
 
 @MainActor
 class ContactViewModel: ObservableObject {
-    @Published var contacts: [Contact] = []
+    @Published var contacts: [ContactModel] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     
@@ -27,7 +27,7 @@ class ContactViewModel: ObservableObject {
         isLoading = true
         
         do {
-            let descriptor = FetchDescriptor<Contact>(sortBy: [SortDescriptor(\.firstName)])
+            let descriptor = FetchDescriptor<ContactModel>(sortBy: [SortDescriptor(\.firstName)])
             contacts = try modelContext.fetch(descriptor)
             isLoading = false
         } catch {
@@ -36,7 +36,7 @@ class ContactViewModel: ObservableObject {
         }
     }
     
-    func addContact(_ contact: Contact) {
+    func addContact(_ contact: ContactModel) {
         modelContext.insert(contact)
         
         do {
@@ -47,7 +47,7 @@ class ContactViewModel: ObservableObject {
         }
     }
     
-    func updateContact(_ contact: Contact) {
+    func updateContact(_ contact: ContactModel) {
         do {
             try modelContext.save()
             loadContacts()
@@ -56,7 +56,7 @@ class ContactViewModel: ObservableObject {
         }
     }
     
-    func deleteContact(_ contact: Contact) {
+    func deleteContact(_ contact: ContactModel) {
         modelContext.delete(contact)
         
         do {
@@ -67,7 +67,7 @@ class ContactViewModel: ObservableObject {
         }
     }
     
-    func upcomingBirthdays(within days: Int = 30) -> [Contact] {
+    func upcomingBirthdays(within days: Int = 30) -> [ContactModel] {
         let calendar = Calendar.current
         let today = Date()
         let thirtyDaysLater = calendar.date(byAdding: .day, value: days, to: today)!
@@ -100,7 +100,7 @@ class ContactViewModel: ObservableObject {
         }
     }
     
-    func fullName(for contact: Contact) -> String {
+    func fullName(for contact: ContactModel) -> String {
         if let lastName = contact.lastName, !lastName.isEmpty {
             return "\(contact.firstName) \(lastName)"
         }

@@ -15,8 +15,8 @@ final class GiftModel {
     @Attribute var updatedAt: Date
 
     // Relationships
-    @Relationship(deleteRule: .cascade) var contactRef: ContactModel?
-    @Relationship(deleteRule: .nullify) var occasionRef: OccasionModel?
+    @Relationship(deleteRule: .nullify, inverse: \ContactModel.gifts) var contactRef: ContactModel?
+    @Relationship(deleteRule: .nullify, inverse: \OccasionModel.gifts) var occasionRef: OccasionModel?
     
     init(id: UUID = UUID(), name: String = "", descriptionText: String? = nil, price: Double? = nil, sourceURL: String? = nil, photoPath: String? = nil, isPurchased: Bool = false, createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.id = id

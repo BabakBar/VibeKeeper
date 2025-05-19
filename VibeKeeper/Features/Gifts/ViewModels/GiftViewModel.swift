@@ -6,7 +6,7 @@ import Combine
 
 @MainActor
 class GiftViewModel: ObservableObject {
-    @Published var gifts: [GiftIdea] = []
+    @Published var gifts: [GiftModel] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     
@@ -27,7 +27,7 @@ class GiftViewModel: ObservableObject {
         isLoading = true
         
         do {
-            let descriptor = FetchDescriptor<GiftIdea>(sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
+            let descriptor = FetchDescriptor<GiftModel>(sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
             gifts = try modelContext.fetch(descriptor)
             isLoading = false
         } catch {
@@ -36,7 +36,7 @@ class GiftViewModel: ObservableObject {
         }
     }
     
-    func addGift(_ gift: GiftIdea) {
+    func addGift(_ gift: GiftModel) {
         modelContext.insert(gift)
         
         do {
@@ -47,7 +47,7 @@ class GiftViewModel: ObservableObject {
         }
     }
     
-    func updateGift(_ gift: GiftIdea) {
+    func updateGift(_ gift: GiftModel) {
         do {
             try modelContext.save()
             loadGifts()
@@ -56,7 +56,7 @@ class GiftViewModel: ObservableObject {
         }
     }
     
-    func deleteGift(_ gift: GiftIdea) {
+    func deleteGift(_ gift: GiftModel) {
         modelContext.delete(gift)
         
         do {
@@ -67,33 +67,33 @@ class GiftViewModel: ObservableObject {
         }
     }
     
-    func giftsByContact(_ contact: Contact) -> [GiftIdea] {
+    func giftsByContact(_ contact: ContactModel) -> [GiftModel] {
         return gifts.filter { gift in 
-            if let giftContact = gift.contact {
+            if let giftContact = gift.contactRef {
                 return giftContact.id == contact.id
             }
             return false
         }
     }
     
-    func giftsByOccasion(_ occasion: Occasion) -> [GiftIdea] {
+    func giftsByOccasion(_ occasion: OccasionModel) -> [GiftModel] {
         return gifts.filter { gift in 
-            if let giftOccasion = gift.occasion {
+            if let giftOccasion = gift.occasionRef {
                 return giftOccasion.id == occasion.id
             }
             return false
         }
     }
     
-    func purchasedGifts() -> [GiftIdea] {
+    func purchasedGifts() -> [GiftModel] {
         return gifts.filter { $0.isPurchased }
     }
     
-    func unpurchasedGifts() -> [GiftIdea] {
+    func unpurchasedGifts() -> [GiftModel] {
         return gifts.filter { !$0.isPurchased }
     }
     
-    func togglePurchased(_ gift: GiftIdea) {
+    func togglePurchased(_ gift: GiftModel) {
         gift.isPurchased.toggle()
         
         do {

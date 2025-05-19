@@ -6,7 +6,7 @@ import Combine
 
 @MainActor
 class OccasionViewModel: ObservableObject {
-    @Published var occasions: [Occasion] = []
+    @Published var occasions: [OccasionModel] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     
@@ -27,7 +27,7 @@ class OccasionViewModel: ObservableObject {
         isLoading = true
         
         do {
-            let descriptor = FetchDescriptor<Occasion>(sortBy: [SortDescriptor(\.date)])
+            let descriptor = FetchDescriptor<OccasionModel>(sortBy: [SortDescriptor(\.date)])
             occasions = try modelContext.fetch(descriptor)
             isLoading = false
         } catch {
@@ -36,7 +36,7 @@ class OccasionViewModel: ObservableObject {
         }
     }
     
-    func addOccasion(_ occasion: Occasion) {
+    func addOccasion(_ occasion: OccasionModel) {
         modelContext.insert(occasion)
         
         do {
@@ -47,7 +47,7 @@ class OccasionViewModel: ObservableObject {
         }
     }
     
-    func updateOccasion(_ occasion: Occasion) {
+    func updateOccasion(_ occasion: OccasionModel) {
         do {
             try modelContext.save()
             loadOccasions()
@@ -56,7 +56,7 @@ class OccasionViewModel: ObservableObject {
         }
     }
     
-    func deleteOccasion(_ occasion: Occasion) {
+    func deleteOccasion(_ occasion: OccasionModel) {
         modelContext.delete(occasion)
         
         do {
@@ -67,7 +67,7 @@ class OccasionViewModel: ObservableObject {
         }
     }
     
-    func upcomingOccasions(within days: Int = 30) -> [Occasion] {
+    func upcomingOccasions(within days: Int = 30) -> [OccasionModel] {
         let calendar = Calendar.current
         let today = Date()
         let endDate = calendar.date(byAdding: .day, value: days, to: today)!
@@ -80,7 +80,7 @@ class OccasionViewModel: ObservableObject {
         }
     }
     
-    private func getNextOccurrenceDate(for occasion: Occasion, from date: Date) -> Date {
+    private func getNextOccurrenceDate(for occasion: OccasionModel, from date: Date) -> Date {
         let calendar = Calendar.current
         let occasionDate = occasion.date
         
@@ -115,7 +115,7 @@ class OccasionViewModel: ObservableObject {
         return thisYearDate
     }
     
-    func daysUntil(_ occasion: Occasion) -> Int {
+    func daysUntil(_ occasion: OccasionModel) -> Int {
         let calendar = Calendar.current
         let today = Date()
         let nextDate = getNextOccurrenceDate(for: occasion, from: today)

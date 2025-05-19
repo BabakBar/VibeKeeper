@@ -16,7 +16,7 @@ final class OccasionModel {
     @Relationship(deleteRule: .nullify, inverse: \GiftModel.occasionRef)
     var gifts: [GiftModel] = []
     
-    @Relationship(deleteRule: .nullify)
+    @Relationship(deleteRule: .nullify, inverse: \ContactModel.occasions)
     var contactRef: ContactModel?
     
     init(id: UUID = UUID(), name: String = "", date: Date = Date(), isRecurring: Bool = false, notes: String? = nil, createdAt: Date = Date(), updatedAt: Date = Date()) {

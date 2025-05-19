@@ -90,6 +90,24 @@ struct TestView: View {
 }
 
 #Preview {
-    TestView()
-        .modelContainer(for: [GiftModel.self, ContactModel.self, OccasionModel.self, ReminderModel.self])
+    let previewContainer = try! ModelContainer(for: GiftModel.self, ContactModel.self, OccasionModel.self, ReminderModel.self)
+    
+    // Add some sample data
+    let context = previewContainer.mainContext
+    let contact1 = ContactModel(firstName: "John", lastName: "Doe", relationship: "Friend", birthday: Date())
+    let contact2 = ContactModel(firstName: "Jane", lastName: "Smith", relationship: "Family", birthday: Date().addingTimeInterval(86400 * 30))
+    
+    let gift1 = GiftModel(name: "Wireless Headphones", descriptionText: "Noise cancelling", price: 199.99, isPurchased: false)
+    let gift2 = GiftModel(name: "Smart Watch", descriptionText: "Health tracking features", price: 349.99, isPurchased: true)
+    
+    gift1.contactRef = contact1
+    gift2.contactRef = contact1
+    
+    context.insert(contact1)
+    context.insert(contact2)
+    context.insert(gift1)
+    context.insert(gift2)
+    
+    return TestView()
+        .modelContainer(previewContainer)
 }
