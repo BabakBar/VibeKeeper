@@ -1,0 +1,36 @@
+# How to Run VibeKeeper Mini-MVP
+
+## Prerequisites
+- Make sure you're in the mini-mvp directory
+- UV package manager installed
+
+## Steps to Run (Recommended - UV Project Management)
+
+1. Install dependencies (if not already done):
+   uv sync
+
+2. Run the application:
+   uv run uvicorn main:app --reload --port 8001
+
+3. Access the application:
+   http://localhost:8001
+
+## Alternative: Manual Virtual Environment
+
+1. Activate virtual environment:
+   source .venv/bin/activate
+
+2. Run the application:
+   uvicorn main:app --reload --port 8001
+
+## Alternative Ports
+If port 8001 is also busy, try:
+   uv run uvicorn main:app --reload --port 8002
+   uv run uvicorn main:app --reload --port 8003
+
+## Troubleshooting
+- If "Address already in use" error occurs, change the port number
+- To kill process on port 8000: lsof -ti:8000 | xargs kill
+- Dependencies are managed in pyproject.toml and uv.lock
+- Run `uv sync` to ensure environment matches lockfile
+- Set up .env file with your API keys before testing AI features

@@ -17,14 +17,23 @@ Building a simple validation prototype using:
 
 ## Development Commands
 
+**IMPORTANT**: Always use `uv` for package management and environment management in this project. Use `uv add` for proper dependency management with pyproject.toml and uv.lock.
+
 ```bash
-# Setup
+# Setup (Proper UV Project Management)
+cd mini-mvp
+uv init --no-readme --no-pin-python  # Initialize if not done
+uv add python-fasthtml litellm uvicorn sqlalchemy aiosqlite
+
+# Alternative: Manual venv setup (less preferred)
 uv venv venv
 source venv/bin/activate
-uv pip install fasthtml litellm uvicorn sqlalchemy aiosqlite
+uv pip install python-fasthtml litellm uvicorn sqlalchemy aiosqlite
 
 # Run
-uvicorn main:app --reload
+uv run uvicorn main:app --reload --port 8001
+# Or with activated venv:
+uvicorn main:app --reload --port 8001
 ```
 
 ## Expected Project Structure

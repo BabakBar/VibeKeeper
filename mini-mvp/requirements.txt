@@ -1,0 +1,6 @@
+fasthtml
+uvicorn
+litellm
+sqlalchemy
+aiosqlite
+python-dotenv
