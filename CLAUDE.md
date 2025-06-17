@@ -2,40 +2,72 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Important Notice
-
-**For comprehensive guidance, please refer to the detailed CLAUDE.md file at `/claude/CLAUDE.md`**
-
-This repository includes an extensive Claude-optimized structure in the `/claude` directory, containing:
-
-- Detailed documentation on components and architecture
-- Implementation patterns with examples
-- Error patterns and solutions
-- iOS development resources
-- Semantic code indexing and memory anchors
-
 ## Project Overview
 
-VibeKeeper is an iOS app for capturing and managing gift ideas and important dates for friends and family. It uses AI to extract relevant information from voice, text, or image inputs. The project is in early development stages with Swift and SwiftUI.
+VibeKeeper is an AI-powered occasion tracking application. Users input natural language like "Bahar birthday is on 04/04" and AI extracts structured data (person, occasion, date).
 
-## Quick Reference
+## Current Focus: Mini MVP
 
-### Project Structure
-- `/VibeKeeper/` - Main app directory with Swift files
-- `/docs/` - Project specifications
-- `/claude/` - Claude-optimized resources and documentation
+Building a simple validation prototype using:
 
-### Key Resources
-- Project specs: `/docs/VibeKeeper.md` and `/docs/VibeKeeper-spec.md`
-- Component docs: `/claude/models/`
-- Implementation patterns: `/claude/patterns/`
-- iOS development: `/claude/ios/ios_development_resources.md`
+- **Framework**: FastHTML (Python)
+- **Database**: SQLite 
+- **AI**: LiteLLM
+- **Server**: Uvicorn
 
-### Memory Anchors
-Use memory anchors throughout the `/claude` directory to access specific information:
-- `MA-0x`: Core model concepts
-- `MA-1xx`: Service implementations
-- `MA-3xx`: iOS development resources
-- `MA-Dxxx`: Version changes
+## Development Commands
 
-For detailed guidance, explore the `/claude` directory structure, particularly the comprehensive documentation at `/claude/CLAUDE.md`.
+**IMPORTANT**: Always use `uv` for package management and environment management in this project. Use `uv add` for proper dependency management with pyproject.toml and uv.lock.
+
+```bash
+# Setup (Proper UV Project Management)
+cd mini-mvp
+uv init --no-readme --no-pin-python  # Initialize if not done
+uv add python-fasthtml litellm uvicorn sqlalchemy aiosqlite
+
+# Alternative: Manual venv setup (less preferred)
+uv venv venv
+source venv/bin/activate
+uv pip install python-fasthtml litellm uvicorn sqlalchemy aiosqlite
+
+# Run
+uv run uvicorn main:app --reload --port 8001
+# Or with activated venv:
+uvicorn main:app --reload --port 8001
+```
+
+## Expected Project Structure
+
+```text
+/mini-mvp/
+├── main.py             # FastHTML app entry point
+├── components/         # UI components
+├── models.py           # Database models
+├── ai_extractor.py     # LiteLLM integration
+└── occasions.db        # SQLite database
+```
+
+## Environment Variables
+
+```bash
+LITELLM_API_KEY=your-api-key
+LITELLM_MODEL=gpt-4o-mini
+```
+
+## Core Features
+
+- Text input form for occasion capture
+- AI extraction of person/occasion/date from natural language
+- Display occasions in card format
+- Basic search/filter functionality
+
+## AI Integration
+
+Uses LiteLLM to extract structured data from natural language input.
+
+## Development Workflow
+
+1. **Explore**: Read files, use subagents to investigate
+2. **Plan**: Create implementation plan & checklists (use ultrathink for complex features)
+3. **Code**: Test-driven development, verify solutions as you implement
+4. **Commit**: Write tests, commit; code, iterate, commit

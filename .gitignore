@@ -1,0 +1,15 @@
+# Environment variables
+.env
+
+# SQLite database
+occasions.db
+
+# Python virtual environment
+/venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+mini-mvp/occasions.db-shm
+mini-mvp/occasions.db-wal
