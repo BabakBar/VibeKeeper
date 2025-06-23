@@ -90,26 +90,25 @@
 
 ## 🔜 Next Steps: Phase 1 - Backend Core
 
-**Estimated Time:** 2-3 hours  
-**Priority:** High  
+## ✅ Phase 1 Progress (Backend Core Development)
 
-### Immediate Tasks:
-1. **Create config.py** - Environment settings management
-2. **Create database.py** - Async SQLAlchemy setup
-3. **Enhance models.py** - User and Occasion models
-4. **Create schemas.py** - Pydantic validation models
-5. **Enhance ai_extractor.py** - Add confidence scoring
-6. **Create auth.py** - JWT authentication system
+**Status:** In-progress – foundational modules complete  
+**Time Spent:** ~1 h (coding & refactor)
 
-### Files to Create:
-- `backend/config.py`
-- `backend/database.py` 
-- `backend/schemas.py`
-- `backend/auth.py`
+### Completed Tasks
+1. `backend/config.py` – Pydantic-settings configuration singleton
+2. `backend/database.py` – async SQLAlchemy engine, session factory, helper dependency
+3. `backend/models.py` – new `User` + enhanced `Occasion` models with helper methods and enum status
+4. `backend/schemas.py` – full Pydantic schema set (users, tokens, occasions, filters)
+5. `backend/ai_extractor.py` – LiteLLM-powered extractor with confidence scoring & date normalisation
+6. `backend/auth.py` – JWT helpers (`create_access_token`, `get_current_user`) and user upsert util
 
-### Files to Enhance:
-- `backend/models.py` (add User model, enhance Occasion model)
-- `backend/ai_extractor.py` (add confidence scoring, better date parsing)
+### Remaining for Phase 1
+• Test fixtures & first unit tests  
+• Wire-up FastAPI `main.py` and stub routers (optional but nice for local runs)  
+• Update `.env.example` with new vars (`JWT_SECRET_KEY`, `LITELLM_API_KEY` etc.)
+
+Phase 1 will be fully closed after those items plus green tests. 🚀
 
 ---
 
