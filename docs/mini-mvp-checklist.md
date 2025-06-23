@@ -11,12 +11,12 @@ Validate that users find value in:
 4. Basic search and filter functionality for easy retrieval
 
 ## Tech Stack (Minimal)
-- **Framework**: FastHTML (Python-based web framework)
-- **Interactivity**: HTMX for dynamic UI updates
+- **Framework**: Python + Nuxt/Vue
+- **Interactivity**: refer to Vue-Nuxt-guide.md
 - **Server**: Uvicorn (async ASGI server)
 - **AI**: LiteLLM library (supports multiple providers)
 - **Storage**: SQLite with async ORM (simple file-based DB)
-- **Styling**: Minimal CSS with FastHTML components
+- **Styling**: refer to Vue-Nuxt-guide.md
 
 ## MVP Feature Checklist
 
@@ -64,16 +64,6 @@ Validate that users find value in:
 
 ### Technical Implementation ✅
 
-- [ ] **FastHTML App Structure**
-  - Python-based component architecture
-  - Reusable UI components as Python functions
-  - Clean route handlers
-
-- [ ] **HTMX Integration**
-  - Dynamic form submissions without page reload
-  - Real-time UI updates
-  - Progressive enhancement
-
 - [ ] **Database Setup**
   - SQLite with async ORM (SQLAlchemy or similar)
   - Simple occasion model (person, occasion, date, notes)
@@ -96,7 +86,7 @@ Validate that users find value in:
 
 ```python
 /mini-mvp/
-├── main.py             # FastHTML app entry point
+├── main.py             # app entry point
 ├── components/
 │   ├── __init__.py
 │   ├── layout.py       # Base layout components
