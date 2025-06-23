@@ -14,22 +14,41 @@ Build an AI-powered occasion tracking app with Python (FastAPI) backend and Vue 
 
 ---
 
-## 📋 Phase 0: Environment Setup ✅
+## 📋 Phase 0: Environment Setup ✅ **COMPLETED**
 
-### Backend Setup
+### Backend Setup ✅
 
-- [ ] Create `app/backend` directory structure
-- [ ] Initialize UV project: `uv init --no-readme --no-pin-python`
-- [ ] Create virtual environment: `uv venv && source .venv/bin/activate`
-- [ ] Create `.env` file with API keys
-- [ ] Create `.gitignore` for Python/Node/IDE files
+- [x] Create `mini-mvp/backend` directory structure
+- [x] Initialize UV project: `uv init --no-readme --no-pin-python`
+- [x] Create virtual environment: `uv venv && source .venv/bin/activate`
+- [x] Create `.env.example` file with API keys template
+- [x] Create `.gitignore` for Python/Node/IDE files
+- [x] Move existing files (`ai_extractor.py`, `models.py`) to backend structure
+- [x] Create proper Python package structure with `__init__.py` files
 
-### Frontend Setup  
+### Frontend Setup ✅
 
-- [ ] Create `app/frontend` directory
-- [ ] Initialize Nuxt 3: `npx nuxi@latest init . --force`
-- [ ] Install core dependencies: `npm install -D @nuxtjs/tailwindcss @pinia/nuxt`
-- [ ] Install utilities: `npm install dayjs axios @vueuse/nuxt`
+- [x] Create `mini-mvp/frontend` directory
+- [x] Initialize Nuxt 3: `npx nuxi@latest init . --force` (with Bun)
+- [x] Install core dependencies: `bun add -D @nuxtjs/tailwindcss @pinia/nuxt`
+- [x] Install utilities: `bun add dayjs axios @vueuse/nuxt`
+- [x] Configure `nuxt.config.ts` with modules and runtime config
+- [x] Create directory structure: `components/`, `composables/`, `middleware/`, `stores/`
+
+### Dependencies Status ✅
+
+**Backend Dependencies Installed:**
+- [x] FastAPI, Uvicorn, SQLAlchemy, AIOSQLite
+- [x] LiteLLM for AI integration
+- [x] Pydantic, Python-Jose, Passlib for auth
+- [x] Development tools: pytest, httpx, faker
+
+**Frontend Dependencies Installed:**
+- [x] Nuxt 3 + Vue 3 base
+- [x] Tailwind CSS integration
+- [x] Pinia for state management
+- [x] VueUse utilities
+- [x] Axios for API calls, DayJS for dates
 
 ---
 
