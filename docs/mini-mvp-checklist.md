@@ -1,134 +1,297 @@
-# VibeKeeper Mini MVP - Validation Checklist
+# 🎯 VibeKeeper Mini-MVP Checklist
 
-## Concept
-AI-powered occasion keeper/reminder app and organization tool to validate the core value proposition with minimal tech complexity.
+## Overview
 
-## Goal
-Validate that users find value in:
-1. Natural language occasion capture
-2. AI extraction of recipient, occasion, budget, etc.
-3. Simple organization of occasion reminders
-4. Basic search and filter functionality for easy retrieval
+Build an AI-powered occasion tracking app with Python (FastAPI) backend and Vue 3/Nuxt 3 frontend. Users input natural language like "Bahar's birthday is on April 4th" and AI extracts structured data.
 
-## Tech Stack (Minimal)
-- **Framework**: Python + Nuxt/Vue
-- **Interactivity**: refer to Vue-Nuxt-guide.md
-- **Server**: Uvicorn (async ASGI server)
-- **AI**: LiteLLM library (supports multiple providers)
-- **Storage**: SQLite with async ORM (simple file-based DB)
-- **Styling**: refer to Vue-Nuxt-guide.md
+## Tech Stack
 
-## MVP Feature Checklist
-
-### Core Features ✅
-
-- [ ] **Simple Text Input Form**
-  - Single textarea for capturing event, birthday, anniversary, etc.
-  - Example: "Bahar birthday is on 04/04" - "My anniversary is on 05/05"
-
-- [ ] **AI-Powered Extraction** (LiteLLM)
-  - Extract: person name, occasion type, date, relationship, notes
-  - Display confidence score
-  - Allow manual editing of extracted data
-
-- [ ] **Basic Occasion Display**
-  - Card-based layout showing extracted information
-  - Status indicators (upcoming/past/dismissed)
-  - Edit/delete functionality
-
-- [ ] **Simple Search & Filter**
-  - Filter by person name
-  - Filter by occasion type (birthday, anniversary, etc.)
-  - Sort by date (upcoming first)
-
-- [ ] **Database Persistence**
-  - Save occasions to SQLite database
-  - Simple single-user setup for MVP
-
-### UI Components ✅
-
-- [ ] **Landing Page**
-  - Simple hero section explaining the concept
-  - a big button to start using the app
-
-- [ ] **Main App Interface**
-  - Clean, minimal design
-  - Mobile-friendly responsive layout
-  - Clear visual hierarchy
-
-- [ ] **Occasion Cards**
-  - Display: person, occasion type, date, relationship, notes
-  - Action buttons: edit, mark reminded, delete
-  - Visual indicators for upcoming/past events
-  - Days until/since counter
-
-### Technical Implementation ✅
-
-- [ ] **Database Setup**
-  - SQLite with async ORM (SQLAlchemy or similar)
-  - Simple occasion model (person, occasion, date, notes)
-  - Basic CRUD operations
-
-- [ ] **LiteLLM Integration**
-  - Setup API key configuration
-  - Create extraction prompt template
-  - Handle API responses and errors
-  - Parse JSON output from AI
-
-## Validation Metrics
-
-### AI Accuracy
-- [ ] Extraction accuracy rate (target: >95% correct)
-- [ ] User edit rate (lower is better)
-- [ ] Fields successfully extracted (person, date should be 90%+)
-
-## File Structure
-
-```python
-/mini-mvp/
-├── main.py             # app entry point
-├── components/
-│   ├── __init__.py
-│   ├── layout.py       # Base layout components
-│   ├── forms.py        # Form components
-│   └── cards.py        # Occasion card components
-├── models.py           # Database models
-├── ai_extractor.py     # LiteLLM integration
-├── static/
-│   └── style.css       # Minimal CSS
-├── occasions.db        # SQLite database
-└── requirements.txt    # Python dependencies
-```
-
-## Success Criteria
-- [ ] **Technical**: App works end-to-end without errors
-- [ ] **User Experience**: Users can add and find occasions easily
-- [ ] **AI Performance**: Extraction works for 9/10 test cases
-
-## Next Steps After Validation
-If MVP shows promise:
-1. Add user authentication
-2. Build proper backend with database
-3. Add push notifications/email reminders
-4. Mobile app development
-5. Calendar integration and recurring events
+- **Backend**: FastAPI + SQLAlchemy + SQLite
+- **Frontend**: Nuxt 3 + Vue 3 + Tailwind CSS  
+- **AI**: LiteLLM (OpenAI/GPT-4)
+- **Auth**: JWT tokens (OAuth ready)
+- **Package Management**: UV for Python, npm for Node
 
 ---
 
-**Timeline**: 1-2 weeks to build and test
-**Budget**: ~$20-50 for AI API calls during testing
-**Risk**: Low - minimal investment, quick to pivot if needed
+## 📋 Phase 0: Environment Setup ✅
 
-## Quick Start Commands
+### Backend Setup
+
+- [ ] Create `app/backend` directory structure
+- [ ] Initialize UV project: `uv init --no-readme --no-pin-python`
+- [ ] Create virtual environment: `uv venv && source .venv/bin/activate`
+- [ ] Create `.env` file with API keys
+- [ ] Create `.gitignore` for Python/Node/IDE files
+
+### Frontend Setup  
+
+- [ ] Create `app/frontend` directory
+- [ ] Initialize Nuxt 3: `npx nuxi@latest init . --force`
+- [ ] Install core dependencies: `npm install -D @nuxtjs/tailwindcss @pinia/nuxt`
+- [ ] Install utilities: `npm install dayjs axios @vueuse/nuxt`
+
+---
+
+## 📋 Phase 1: Backend Core (Day 1) ✅
+
+### Dependencies & Configuration
+
+- [ ] Install all backend dependencies via UV:
+  ```bash
+  uv add fastapi uvicorn[standard] sqlalchemy aiosqlite litellm pydantic python-multipart python-jose[cryptography] passlib[bcrypt] pydantic-settings python-dotenv
+  ```
+- [ ] Create `config.py` with environment settings
+- [ ] Create `database.py` with async SQLAlchemy setup
+
+### Data Models
+
+- [ ] Create enhanced `models.py`:
+  - [ ] User model (id, email, full_name, provider)
+  - [ ] Occasion model with all fields
+  - [ ] Helper methods (days_until, is_upcoming)
+- [ ] Create `schemas.py` with Pydantic models:
+  - [ ] Auth schemas (UserCreate, Token, etc.)
+  - [ ] Occasion schemas (Create, Update, Response)
+  - [ ] Filter schemas
+
+### AI Integration
+
+- [ ] Enhance `ai_extractor.py`:
+  - [ ] Confidence scoring
+  - [ ] Better date parsing
+  - [ ] Relationship extraction
+  - [ ] Error handling
+
+### Authentication
+
+- [ ] Create `auth.py`:
+  - [ ] JWT token creation/verification
+  - [ ] User management functions
+  - [ ] Protected route dependencies
+
+---
+
+## 📋 Phase 2: Backend API (Day 2) ✅
+
+### API Routes
+
+- [ ] Create `api/auth.py`:
+  - [ ] POST `/api/auth/login/test` (dev login)
+  - [ ] POST `/api/auth/login/google` (placeholder)
+  - [ ] GET `/api/auth/me` (current user)
+
+- [ ] Create `api/occasions.py`:
+  - [ ] POST `/api/occasions/extract` (AI extraction)
+  - [ ] POST `/api/occasions/` (create)
+  - [ ] GET `/api/occasions/` (list with filters)
+  - [ ] GET `/api/occasions/{id}` (single)
+  - [ ] PUT `/api/occasions/{id}` (update)
+  - [ ] DELETE `/api/occasions/{id}` (delete)
+  - [ ] GET `/api/occasions/search/` (search)
+
+### Main Application
+
+- [ ] Create `main.py`:
+  - [ ] FastAPI app setup
+  - [ ] CORS middleware
+  - [ ] Database initialization
+  - [ ] Router mounting
+  - [ ] Health check endpoint
+
+### Testing
+
+- [ ] Create test fixtures (`tests/conftest.py`)
+- [ ] Write AI extractor tests
+- [ ] Write API endpoint tests
+- [ ] Run tests: `uv run pytest -v`
+
+---
+
+## 📋 Phase 3: Frontend Setup (Day 3) ✅
+
+### Configuration
+
+- [ ] Configure `nuxt.config.ts`:
+  - [ ] API proxy setup
+  - [ ] Tailwind CSS
+  - [ ] Module configuration
+  - [ ] TypeScript strict mode
+
+### Core Files
+
+- [ ] Create `types/index.ts` with TypeScript interfaces
+- [ ] Create `assets/css/main.css` with Tailwind utilities
+- [ ] Create `app.vue` with auth initialization
+
+### Composables & Stores
+
+- [ ] Create `composables/useApi.ts` (API client base)
+- [ ] Create `composables/useAuth.ts` (auth logic)
+- [ ] Create `composables/useOccasions.ts` (occasions API)
+- [ ] Create `stores/auth.ts` (Pinia auth state)
+- [ ] Create `middleware/auth.ts` (route protection)
+
+### Pages
+
+- [ ] Create `pages/login.vue`:
+  - [ ] Test login form
+  - [ ] OAuth placeholders
+  - [ ] Error handling
+
+- [ ] Create `pages/index.vue`:
+  - [ ] Landing page
+  - [ ] Hero section
+  - [ ] Feature cards
+  - [ ] CTA buttons
+
+---
+
+## 📋 Phase 4: Frontend Components (Day 4) ✅
+
+### Layout Components
+
+- [ ] Create `components/AppLayout.vue`:
+  - [ ] Header with user info
+  - [ ] Logout functionality
+  - [ ] Main content wrapper
+
+### Feature Components
+
+- [ ] Create `components/OccasionInput.vue`:
+  - [ ] Textarea for natural language
+  - [ ] AI extraction display
+  - [ ] Confidence score
+  - [ ] Save/cancel actions
+
+- [ ] Create `components/OccasionCard.vue`:
+  - [ ] Display all occasion details
+  - [ ] Days until indicator
+  - [ ] Edit/delete buttons
+  - [ ] Status badges
+
+- [ ] Create `components/SearchFilter.vue`:
+  - [ ] Search input
+  - [ ] Type filter dropdown
+  - [ ] Upcoming only toggle
+  - [ ] Debounced updates
+
+- [ ] Create `components/ConfidenceScore.vue`:
+  - [ ] Visual confidence bar
+  - [ ] Color coding
+  - [ ] Percentage display
+
+### Main App Page
+
+- [ ] Create `pages/app.vue`:
+  - [ ] Protected by auth middleware
+  - [ ] Occasion input form
+  - [ ] Search/filter controls
+  - [ ] Occasions grid
+  - [ ] Loading states
+  - [ ] Empty states
+
+---
+
+## 📋 Phase 5: Testing & Polish (Day 5) ✅
+
+### Backend Testing
+
+- [ ] Run all tests: `uv run pytest -v`
+- [ ] Test API manually via docs: `http://localhost:8001/docs`
+- [ ] Verify all endpoints work
+- [ ] Check error handling
+
+### Frontend Testing
+
+- [ ] Test login flow
+- [ ] Test occasion creation
+- [ ] Test AI extraction accuracy
+- [ ] Test search/filter
+- [ ] Test edit/delete
+- [ ] Test responsive design
+
+### Integration Testing
+
+- [ ] Full user journey test
+- [ ] Error state testing
+- [ ] Performance with 50+ occasions
+- [ ] Cross-browser testing
+
+### Final Polish
+
+- [ ] Loading animations
+- [ ] Error messages
+- [ ] Success feedback
+- [ ] Mobile optimization
+- [ ] Accessibility basics
+
+---
+
+## 🚀 Launch Commands
+
+### Backend
 
 ```bash
-# Create virtual environment
-uv venv venv
-source venv/bin/activate  # or `venv\Scripts\activate` on Windows
-
-# Install dependencies
-uv pip install fasthtml htmx litellm uvicorn sqlalchemy aiosqlite
-
-# Run development server
-uvicorn main:app --reload
+cd mini-mvp/backend
+source .venv/bin/activate
+uv run uvicorn main:app --reload --port 8001
 ```
+
+### Frontend
+
+```bash
+cd mini-mvp/frontend
+npm install
+npm run dev
+```
+
+### Access Points
+
+- Frontend: http://localhost:3000
+- API Docs: http://localhost:8001/docs
+
+---
+
+## ✅ Success Metrics
+
+### Functionality
+
+- [ ] Natural language → structured data (>90% accuracy)
+- [ ] All CRUD operations work
+- [ ] Search and filters functional
+- [ ] Data persists between sessions
+
+### User Experience  
+
+- [ ] < 3 clicks to add occasion
+- [ ] < 2s AI extraction time
+- [ ] Mobile responsive
+- [ ] Clear error messages
+
+### Technical
+
+- [ ] Tests passing
+- [ ] No console errors
+- [ ] API response < 200ms
+- [ ] Handles edge cases
+
+---
+
+## 🐛 Common Issues & Fixes
+
+1. **LITELLM_API_KEY Error**: Check `.env` file has valid OpenAI key
+2. **CORS Error**: Verify backend allows `http://localhost:3000`
+3. **Auth Error**: Check JWT_SECRET_KEY is set
+4. **Port in Use**: Kill process `lsof -ti:8001 | xargs kill -9`
+5. **Import Errors**: Ensure virtual env is activated
+
+---
+
+## 📝 Next Steps After MVP
+
+1. **Authentication**: Implement real OAuth (Google/Apple)
+2. **Notifications**: Email/push reminders
+3. **Features**: Recurring events, attachments, sharing
+4. **Mobile**: PWA or native apps
+5. **Scale**: PostgreSQL, Redis, deployment

@@ -1,6 +1,6 @@
 # VibeKeeper Mini-MVP
 
-A simple AI-powered occasion tracking application built with FastHTML.
+A simple AI-powered occasion tracking application built with Python and Vue/Nuxt.
 
 ## Features
 
@@ -41,7 +41,7 @@ A simple AI-powered occasion tracking application built with FastHTML.
 
 2. **Install dependencies (if needed):**
    ```bash
-   uv pip install python-fasthtml litellm uvicorn sqlalchemy aiosqlite
+   uv pip install
    ```
 
 3. **Run the application:**
@@ -62,14 +62,3 @@ A simple AI-powered occasion tracking application built with FastHTML.
 
 - `LITELLM_API_KEY`: Your OpenAI API key
 - `LITELLM_MODEL`: AI model to use (default: gpt-4o-mini)
-
-## Project Structure
-
-```
-mini-mvp/
-├── main.py           # FastHTML application
-├── models.py         # Database models
-├── ai_extractor.py   # AI extraction logic
-├── occasions.db      # SQLite database (created automatically)
-└── components/       # UI components (for future expansion)
-```
