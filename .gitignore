@@ -6,6 +6,7 @@ occasions.db
 
 # Python virtual environment
 /venv/
+CLAUDE.md
 
 # Python cache
 __pycache__/
