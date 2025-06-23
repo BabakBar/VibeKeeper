@@ -1,33 +1,95 @@
-from sqlalchemy import create_engine, Column, Integer, String, Date, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from datetime import datetime
+"""SQLAlchemy ORM models for VibeKeeper."""
 
-Base = declarative_base()
+from __future__ import annotations
+
+from datetime import date, datetime
+from enum import Enum
+
+from sqlalchemy import Column, Date, DateTime, Enum as PgEnum, Float, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from .database import Base
+
+
+class OccasionStatus(str, Enum):
+    ACTIVE = "active"
+    COMPLETED = "completed"
+    DISMISSED = "dismissed"
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    email: Mapped[str] = mapped_column(String, unique=True, nullable=False, index=True)
+    full_name: Mapped[str] = mapped_column(String, nullable=False)
+    provider: Mapped[str] = mapped_column(String, nullable=False)  # e.g. google, apple, dev
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    occasions: Mapped[list["Occasion"]] = relationship(
+        back_populates="owner", cascade="all, delete-orphan"
+    )
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return f"<User {self.email} ({self.provider})>"
+
 
 class Occasion(Base):
-    __tablename__ = 'occasions'
-    
-    id = Column(Integer, primary_key=True, index=True)
-    person = Column(String, nullable=False)
-    occasion_type = Column(String, nullable=False)
-    occasion_date = Column(Date, nullable=False)
-    raw_input = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    def __repr__(self):
-        return f"<Occasion(person='{self.person}', occasion='{self.occasion_type}', date='{self.occasion_date}')>"
+    __tablename__ = "occasions"
 
-DATABASE_URL = "sqlite:///./occasions.db"
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
 
-def create_tables():
-    Base.metadata.create_all(bind=engine)
+    # Core data
+    person: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    occasion_type: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    occasion_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    # Optional
+    person_relationship: Mapped[str | None] = mapped_column(String, nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    confidence_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    status: Mapped[OccasionStatus] = mapped_column(
+        PgEnum(OccasionStatus), default=OccasionStatus.ACTIVE, nullable=False
+    )
+
+    raw_input: Mapped[str] = mapped_column(Text, nullable=False)
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    # Relationships
+    owner: Mapped[User] = relationship(back_populates="occasions")
+
+    # ------------------------------------------------------------------
+    # Helpers
+    # ------------------------------------------------------------------
+
+    def days_until(self) -> int:
+        """Return number of days until the occasion (negative if already passed)."""
+
+        today = date.today()
+        return (self.occasion_date - today).days
+
+    def is_upcoming(self) -> bool:
+        """True when the occasion date is today or in the future."""
+
+        return self.days_until() >= 0
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return (
+            f"<Occasion {self.person} – {self.occasion_type} on {self.occasion_date} "
+            f"({self.status})>"
+        )
