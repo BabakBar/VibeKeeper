@@ -8,7 +8,7 @@ from enum import Enum
 from sqlalchemy import Column, Date, DateTime, Enum as PgEnum, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .database import Base
+from database import Base
 
 
 class OccasionStatus(str, Enum):

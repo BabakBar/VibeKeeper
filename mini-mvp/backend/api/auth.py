@@ -7,10 +7,10 @@ JWT. A production-ready OAuth flow will replace this later.
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..auth import create_access_token, get_current_user, get_or_create_user
-from ..database import get_db
-from ..models import User
-from ..schemas import Token, UserCreate, UserResponse
+from auth import create_access_token, get_current_user, get_or_create_user
+from database import get_db
+from models import User
+from schemas import Token, UserCreate, UserResponse
 
 
 router = APIRouter()

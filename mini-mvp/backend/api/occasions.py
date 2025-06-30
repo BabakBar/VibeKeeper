@@ -8,16 +8,16 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..ai_extractor import extractor
-from ..database import get_db
-from ..models import Occasion, User
-from ..schemas import (
+from ai_extractor import extractor
+from database import get_db
+from models import Occasion, User
+from schemas import (
     OccasionCreate,
     OccasionExtracted,
     OccasionFilter,
     OccasionResponse,
 )
-from ..auth import get_current_user
+from auth import get_current_user
 
 
 router = APIRouter()

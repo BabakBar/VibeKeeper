@@ -9,10 +9,10 @@ from jose import JWTError, jwt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .config import settings
-from .database import get_db
-from .models import User
-from .schemas import TokenData, UserCreate
+from config import settings
+from database import get_db
+from models import User
+from schemas import TokenData, UserCreate
 
 # ---------------------------------------------------------------------------
 # Constants

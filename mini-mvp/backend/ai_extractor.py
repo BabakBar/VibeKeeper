@@ -9,7 +9,7 @@ from typing import Dict, Optional, Tuple
 
 from litellm import completion  # type: ignore
 
-from .config import settings
+from config import settings
 
 
 class OccasionExtractor:
