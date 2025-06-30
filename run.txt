@@ -1,0 +1,163 @@
+# VibeKeeper - Complete Setup & Run Guide
+
+## 🚀 Quick Start Commands
+
+### Prerequisites
+- UV (Python package manager) - Install: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- Bun (JavaScript runtime) - Install: `curl -fsSL https://bun.sh/install | bash`
+
+### 1. Setup Environment Variables
+```bash
+cd mini-mvp/backend
+cp .env.example .env
+# Edit .env and add your OpenAI API key (optional for demo)
+```
+
+### 2. Install Dependencies
+
+#### Backend (Python + FastAPI)
+```bash
+cd mini-mvp/backend
+uv sync
+```
+
+#### Frontend (Vue + Nuxt)
+```bash
+cd mini-mvp/frontend
+bun install
+```
+
+## ▶️ Running the Application
+
+### Start Backend Server (Terminal 1)
+```bash
+cd mini-mvp/backend
+uv run uvicorn main:app --reload --port 8001
+```
+- Backend API: http://localhost:8001
+- API Documentation: http://localhost:8001/docs
+- Health Check: http://localhost:8001/health
+
+### Start Frontend Server (Terminal 2)
+```bash
+cd mini-mvp/frontend
+bun dev
+```
+- Frontend UI: http://localhost:3000 (or 3001 if 3000 is busy)
+
+## 🔌 Application Ports & URLs
+
+| Service | Port | URL | Description |
+|---------|------|-----|-------------|
+| Backend API | 8001 | http://localhost:8001 | FastAPI server with AI extraction |
+| Frontend UI | 3000/3001 | http://localhost:3000 | Vue/Nuxt user interface |
+| API Docs | 8001 | http://localhost:8001/docs | Interactive API documentation |
+| Health Check | 8001 | http://localhost:8001/health | Backend health status |
+
+## 🧪 Testing the Application
+
+### 1. Basic Health Check
+```bash
+# Test backend is running
+curl http://localhost:8001/health
+
+# Expected response: {"status":"ok"}
+```
+
+### 2. Test Frontend
+- Open http://localhost:3000 in browser
+- Should see VibeKeeper UI with gradient background
+- Try adding a sample occasion: "Sarah's birthday is on March 15th"
+
+### 3. Test API Endpoints
+```bash
+# Test occasion extraction (requires OpenAI API key)
+curl -X POST "http://localhost:8001/api/occasions/extract" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Sarah birthday is on March 15th"}'
+
+# Test auth endpoint
+curl -X POST "http://localhost:8001/api/auth/dev-login" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com", "name": "Test User"}'
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues:
+
+**Port Already in Use:**
+```bash
+# Kill processes on ports
+lsof -ti:8001 | xargs kill  # Backend port
+lsof -ti:3000 | xargs kill  # Frontend port
+```
+
+**Import Errors (Backend):**
+- Make sure you're running from the correct directory
+- All relative imports have been fixed to absolute imports
+
+**CSS/Build Errors (Frontend):**
+- TailwindCSS module should handle all styling
+- No custom CSS imports needed
+
+**API Connection Issues:**
+- Backend must be running on port 8001
+- Frontend is configured to connect to http://localhost:8001
+- Check CORS settings allow localhost:3000
+
+## 📁 Project Structure
+
+```
+mini-mvp/
+├── backend/           # FastAPI Python backend
+│   ├── main.py       # Application entry point
+│   ├── api/          # API routes (auth, occasions)
+│   ├── models.py     # Database models
+│   ├── auth.py       # JWT authentication
+│   ├── ai_extractor.py # AI text extraction
+│   └── .env          # Environment variables
+├── frontend/         # Nuxt/Vue frontend
+│   ├── app.vue       # Main application component
+│   ├── nuxt.config.ts # Nuxt configuration
+│   └── package.json  # Node dependencies
+└── run.txt          # This file
+```
+
+## 🔑 Environment Variables
+
+**Backend (.env):**
+```
+OPENAI_API_KEY=your-openai-api-key-here  # Required for AI extraction
+LITELLM_MODEL=gpt-4o-mini                # AI model (optional)
+JWT_SECRET_KEY=your-jwt-secret-here      # JWT signing key
+```
+
+## 📝 Development Workflow
+
+1. **Start both servers** (backend on 8001, frontend on 3000/3001)
+2. **Open frontend** in browser
+3. **Test occasion adding** with natural language
+4. **Check API docs** at http://localhost:8001/docs for backend testing
+5. **Monitor logs** in both terminal windows for debugging
+
+## 🎯 Demo Data
+
+The frontend includes sample occasions:
+- Sarah Johnson's birthday (March 15, 2025)
+- Mike & Lisa's anniversary (July 20, 2025)
+
+You can delete these and add your own using natural language like:
+- "John's birthday is tomorrow"
+- "Team meeting on Friday at 2pm"
+- "Mom's anniversary is next month"
+
+## 🚀 Production Deployment Notes
+
+For production deployment:
+- Set proper JWT_SECRET_KEY (use: `openssl rand -hex 32`)
+- Configure real database URL
+- Set up proper environment variables
+- Use production OPENAI_API_KEY
+- Build frontend: `bun run build`
+- Use production ASGI server like Gunicorn

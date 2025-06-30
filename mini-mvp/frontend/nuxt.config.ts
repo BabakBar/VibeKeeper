@@ -9,11 +9,9 @@ export default defineNuxtConfig({
     '@vueuse/nuxt'
   ],
   
-  css: ['~/assets/css/main.css'],
-  
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE_URL || 'http://localhost:8000'
+      apiBase: process.env.API_BASE_URL || 'http://localhost:8001'
     }
   }
 })
