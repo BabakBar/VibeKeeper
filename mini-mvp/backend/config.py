@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # Database
     # ------------------------------------------------------------------
-    database_url: str = "sqlite+aiosqlite:///./occasions.db"
+    database_url: str = "sqlite+aiosqlite:///occasions.db"
 
     # ------------------------------------------------------------------
     # AI / LiteLLM

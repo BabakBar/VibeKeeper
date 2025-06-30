@@ -118,8 +118,8 @@
                   </span>
                 </div>
                 
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ occasion.person_name }}</h3>
-                <p class="text-gray-600 mb-3">{{ occasion.description }}</p>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ occasion.person }}</h3>
+                <p class="text-gray-600 mb-3">{{ occasion.notes || 'No additional notes' }}</p>
                 
                 <div class="flex items-center text-sm text-gray-500">
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,6 +161,58 @@ const newOccasionText = ref('')
 const searchQuery = ref('')
 const filterType = ref('')
 const isLoading = ref(false)
+const authToken = ref(null)
+const user = ref(null)
+
+// API Configuration
+const API_BASE = 'http://localhost:8001/api'
+
+// API Helper Functions
+const apiCall = async (endpoint, options = {}) => {
+  const url = `${API_BASE}${endpoint}`
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers
+  }
+  
+  if (authToken.value) {
+    headers.Authorization = `Bearer ${authToken.value}`
+  }
+  
+  const response = await fetch(url, {
+    ...options,
+    headers
+  })
+  
+  if (!response.ok) {
+    throw new Error(`API call failed: ${response.status} ${response.statusText}`)
+  }
+  
+  return response.json()
+}
+
+// Authentication
+const login = async () => {
+  try {
+    const result = await apiCall('/auth/login/test', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'dev@vibekeeper.com',
+        full_name: 'Dev User',
+        provider: 'dev'
+      })
+    })
+    
+    authToken.value = result.access_token
+    user.value = result.user
+    localStorage.setItem('authToken', authToken.value)
+    
+    console.log('Logged in successfully')
+  } catch (error) {
+    console.error('Login failed:', error)
+    throw error
+  }
+}
 
 // Computed properties
 const filteredOccasions = computed(() => {
@@ -169,8 +221,8 @@ const filteredOccasions = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(occasion =>
-      occasion.person_name.toLowerCase().includes(query) ||
-      occasion.description.toLowerCase().includes(query) ||
+      occasion.person.toLowerCase().includes(query) ||
+      (occasion.notes && occasion.notes.toLowerCase().includes(query)) ||
       occasion.occasion_type.toLowerCase().includes(query)
     )
   }
@@ -188,23 +240,46 @@ const addOccasion = async () => {
 
   isLoading.value = true
   try {
-    // Mock API call for now - replace with actual API
-    const mockOccasion = {
-      id: Date.now(),
-      person_name: extractPersonName(newOccasionText.value),
-      occasion_type: extractOccasionType(newOccasionText.value),
-      description: newOccasionText.value,
-      occasion_date: extractDate(newOccasionText.value),
-      confidence_score: 0.85,
-      created_at: new Date().toISOString()
+    // Ensure we're authenticated
+    if (!authToken.value) {
+      await login()
     }
-
-    occasions.value.push(mockOccasion)
+    
+    // Extract occasion data using AI
+    const extracted = await apiCall('/occasions/extract', {
+      method: 'POST',
+      body: JSON.stringify({
+        raw_input: newOccasionText.value
+      })
+    })
+    
+    // Create the occasion
+    const newOccasion = await apiCall('/occasions/', {
+      method: 'POST',
+      body: JSON.stringify(extracted)
+    })
+    
+    occasions.value.push(newOccasion)
     newOccasionText.value = ''
   } catch (error) {
     console.error('Error adding occasion:', error)
+    alert('Failed to add occasion. Please try again.')
   } finally {
     isLoading.value = false
+  }
+}
+
+const loadOccasions = async () => {
+  try {
+    // Ensure we're authenticated
+    if (!authToken.value) {
+      await login()
+    }
+    
+    const result = await apiCall('/occasions/')
+    occasions.value = result
+  } catch (error) {
+    console.error('Error loading occasions:', error)
   }
 }
 
@@ -231,47 +306,16 @@ const getOccasionColor = (type) => {
   return colors[type] || colors.other
 }
 
-// Simple extraction functions for demo
-const extractPersonName = (text) => {
-  const match = text.match(/(\w+)'s?\s+(birthday|anniversary)/i)
-  return match ? match[1] : 'Unknown Person'
-}
-
-const extractOccasionType = (text) => {
-  if (text.toLowerCase().includes('birthday')) return 'birthday'
-  if (text.toLowerCase().includes('anniversary')) return 'anniversary'
-  if (text.toLowerCase().includes('meeting')) return 'meeting'
-  return 'other'
-}
-
-const extractDate = (text) => {
-  // Simple date extraction - in real app this would be done by AI
-  const now = new Date()
-  return new Date(now.getFullYear(), now.getMonth() + 1, 15).toISOString().split('T')[0]
-}
 
 // Load occasions on mount
-onMounted(() => {
-  // Add some sample data
-  occasions.value = [
-    {
-      id: 1,
-      person_name: 'Sarah Johnson',
-      occasion_type: 'birthday',
-      description: "Sarah's birthday celebration",
-      occasion_date: '2025-03-15',
-      confidence_score: 0.92,
-      created_at: '2025-06-29T10:00:00Z'
-    },
-    {
-      id: 2,
-      person_name: 'Mike & Lisa',
-      occasion_type: 'anniversary',
-      description: "Mike and Lisa's wedding anniversary",
-      occasion_date: '2025-07-20',
-      confidence_score: 0.88,
-      created_at: '2025-06-28T15:30:00Z'
-    }
-  ]
+onMounted(async () => {
+  // Try to restore auth token from localStorage
+  const savedToken = localStorage.getItem('authToken')
+  if (savedToken) {
+    authToken.value = savedToken
+  }
+  
+  // Load occasions from API
+  await loadOccasions()
 })
 </script>
