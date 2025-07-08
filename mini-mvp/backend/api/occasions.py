@@ -56,10 +56,10 @@ async def extract_occasion(payload: OccasionCreate) -> OccasionExtracted:
 async def create_occasion(
     occasion_in: OccasionExtracted,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),  # type: ignore[arg-type]
+    # current_user: User = Depends(get_current_user),  # type: ignore[arg-type]
 ):
     occ = Occasion(
-        owner_id=current_user.id,
+        owner_id=1,  # Hardcoded for now
         person=occasion_in.person,
         occasion_type=occasion_in.occasion_type,
         occasion_date=occasion_in.occasion_date,

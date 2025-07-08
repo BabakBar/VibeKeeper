@@ -9,6 +9,7 @@ safe way.
 from functools import lru_cache
 from typing import Optional
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -29,13 +30,13 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # AI / LiteLLM
     # ------------------------------------------------------------------
-    litellm_api_key: str
-    litellm_model: str = "gpt-4o-mini"
+    litellm_api_key: str = Field(alias="GEMINI_API_KEY")
+    litellm_model: str = "gemini/gemini-2.5-flash"
 
     # ------------------------------------------------------------------
     # Authentication / JWT
     # ------------------------------------------------------------------
-    jwt_secret_key: str
+    jwt_secret_key: Optional[str] = None
     jwt_algorithm: str = "HS256"
     jwt_expiration_hours: int = 24
 
@@ -45,7 +46,7 @@ class Settings(BaseSettings):
     google_client_id: Optional[str] = None
     google_client_secret: Optional[str] = None
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
 
 # Cache the object so ``settings`` is created once per interpreter process.
