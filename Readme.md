@@ -12,3 +12,11 @@ VibeKeeper is an AI-powered, open-source web app built entirely in Go. Its missi
 
 > **VibeKeeper**  
 > "Keep your vibes on track—with a little help from AI."
+
+order in which they appear:
+sqlc: https://github.com/sqlc-dev/sqlc
+goose: https://github.com/pressly/goose
+goreleaser: https://github.com/goreleaser/goreleaser
+go-blueprint: https://github.com/Melkeydev/go-bluep...
+godotenv: https://github.com/joho/godotenv
+air: https://github.com/air-verse/air
