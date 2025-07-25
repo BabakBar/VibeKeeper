@@ -2,7 +2,7 @@
 
 ## Overview
 
-Build an AI-powered occasion tracking app with Python (FastAPI) backend and Vue 3/Nuxt 3 frontend. Users input natural language like "Bahar's birthday is on April 4th" and AI extracts structured data.
+Build an AI-powered occasion & subscription tracking app completely with Go. Users can input forms or via natural language like "Bahar's birthday is on April 4th" or "i pay for spotify 9 euros each month" and AI extracts structured data.
 
 ## Tech Stack
 
