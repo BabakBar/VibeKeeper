@@ -61,9 +61,10 @@ This roughly follows clean/hexagonal patterns: the **domain/models** hold core e
 
 We can break development into the following steps (not time-bound, just phases):
 
-1. **Initialize Project:** Create basic `cmd/vibekeeper/main.go` that starts a Gin router. Install Gin (current v1.10.0) and verify a simple “/ping” endpoint.
 
-2. **Define Data Models & DB:** Design the core models (e.g. `Occasion` with fields like ID, Title, Date, Type; `Subscription` with Title, RenewalDate, etc.). Use GORM to map these to a database. In code, `AutoMigrate(&Occasion{}, &Subscription{})`. Set up a database connection (SQLite or Postgres). Write repository functions (Create, List, Update, Delete).
+1. **Initialize Project:** ✅ Done — Project initialized, Go modules set up, Go upgraded, Gin installed, and `/ping` endpoint working.
+
+2. **Define Data Models & DB:** ⏳ Next — Design the core models (e.g. `Occasion` with fields like ID, Title, Date, Type; `Subscription` with Title, RenewalDate, etc.). Use GORM to map these to a database. In code, `AutoMigrate(&Occasion{}, &Subscription{})`. Set up a database connection (SQLite or Postgres). Write repository functions (Create, List, Update, Delete).
 
 3. **Implement API Endpoints:** Build RESTful endpoints in Gin (e.g. `POST /api/occasions`, `GET /api/occasions`, etc.) tied to your handlers. Use JSON binding to parse requests, call service-layer logic, and return JSON responses. Keep handlers thin (just parse input and call service functions).
 
