@@ -48,7 +48,7 @@ npm run web
 
 ## Project History
 
-The original Go-based VibeKeeper project has been archived to branch `claude/archive-go-vibekeeper-011CULEFdoVimPHWpC58Yyhu`.
+The original Go-based VibeKeeper project has been archived to branch `claude/go-archive-011CULEFdoVimPHWpC58Yyhu`.
 
 ## License
 
