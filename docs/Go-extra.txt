@@ -1,7 +1,0 @@
-order in which they appear:
-sqlc: https://github.com/sqlc-dev/sqlc
-goose: https://github.com/pressly/goose
-goreleaser: https://github.com/goreleaser/goreleaser
-go-blueprint: https://github.com/Melkeydev/go-blueprint
-godotenv: https://github.com/joho/godotenv
-air: https://github.com/air-verse/air
