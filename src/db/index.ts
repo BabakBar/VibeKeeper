@@ -1,19 +1,45 @@
-import * as SQLite from 'expo-sqlite';
-import { drizzle } from 'drizzle-orm/expo-sqlite';
+import { Platform } from 'react-native';
 import * as schema from './schema';
 
-// Open database connection
-const database = SQLite.openDatabaseSync('vibekeeper.db');
+// Conditional imports based on platform
+let database: any = null;
+let db: any = null;
 
-// Initialize Drizzle ORM
-export const db = drizzle(database, { schema });
+// Only initialize SQLite on native platforms (iOS, Android)
+if (Platform.OS !== 'web') {
+  const SQLite = require('expo-sqlite');
+  const { drizzle } = require('drizzle-orm/expo-sqlite');
+
+  // Open database connection
+  database = SQLite.openDatabaseSync('vibekeeper.db');
+
+  // Initialize Drizzle ORM
+  db = drizzle(database, { schema });
+} else {
+  // Web fallback: use in-memory mock
+  db = {
+    select: () => ({ from: () => Promise.resolve([]) }),
+    insert: () => ({ values: () => Promise.resolve(null) }),
+    update: () => ({ set: () => ({ where: () => Promise.resolve(null) }) }),
+    delete: () => ({ from: () => Promise.resolve(null) }),
+  };
+}
+
+export { db };
 
 /**
  * Initialize database tables
  * Creates tables if they don't exist
+ * On web, this is a no-op (uses in-memory mock)
  */
 export async function initializeDatabase() {
   try {
+    // Skip initialization on web
+    if (Platform.OS === 'web') {
+      console.log('Running on web - using in-memory database mock');
+      return true;
+    }
+
     // Create cigarette_logs table
     await database.execAsync(`
       CREATE TABLE IF NOT EXISTS cigarette_logs (

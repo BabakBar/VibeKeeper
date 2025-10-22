@@ -1,220 +1,287 @@
-# VibeKeeper - Claude Development Guide
+# VibeKeeper - Development Guide
 
 ## Project Overview
 
-**VibeKeeper** is a React Native mobile app (iOS/Android) for tracking cigarette consumption. Currently in **Phase 0: Pre-Development** - planning is complete, implementation has not started.
+**VibeKeeper** is a React Native mobile app (iOS/Android) for tracking cigarette consumption with an offline-first architecture.
 
-**Status**: Planning ✅ | Setup ⏳ | Implementation ⏳
+**Vision**: Privacy-focused, local-first tracking. All data stored on device, no cloud required.
 
-## Current State (What EXISTS Now)
+**For current implementation status and what's been completed, see**: [docs/IMPLEMENTATION_PROGRESS.md](./IMPLEMENTATION_PROGRESS.md)
 
-```
-VibeKeeper/
-├── App.js                 # Expo template (not modified)
-├── package.json           # Minimal: expo, react, react-native only
-├── docs/                  # Comprehensive planning docs
-│   ├── TECHNICAL_SPECIFICATION.md
-│   ├── ARCHITECTURE.md
-│   └── ...
-├── .claude/              # Claude Code configuration
-└── .mcp.json            # MCP servers (context7, sequential-thinking)
-```
+**For detailed architecture and technical specifications, see**: [docs/TECHNICAL_SPECIFICATION.md](./docs/TECHNICAL_SPECIFICATION.md)
 
-**What's NOT built yet**:
-- ❌ No `src/` directory
-- ❌ No TypeScript configuration
-- ❌ No database (Drizzle/SQLite)
-- ❌ No state management (Zustand)
-- ❌ No component library
-- ❌ No navigation setup
-- ❌ No testing infrastructure
-
-## Tech Stack (Planned, Not Implemented)
+## Tech Stack
 
 - **Framework**: Expo SDK 54 + React Native 0.81.4
-- **Language**: TypeScript (to be configured)
-- **Database**: Drizzle ORM + Expo SQLite (to be installed)
-- **State**: Zustand v5 (to be installed)
-- **Styling**: NativeWind v4 (to be installed)
-- **Navigation**: Expo Router v3/v4 (to be configured)
-- **Testing**: Jest + React Native Testing Library (to be configured)
+- **Language**: TypeScript (strict mode)
+- **Database**: Drizzle ORM + Expo SQLite
+- **State Management**: Zustand
+- **Styling**: React Native StyleSheet (native components)
+- **Navigation**: Expo Router
+- **Testing**: Jest + React Testing Library
+- **Utilities**: React Native Gesture Handler, Async Storage, Victory Native (charts)
 
 ## Development Commands
 
 ```bash
-# Development
-npm start                # Start Expo dev server
-npm run android         # Run on Android
-npm run ios             # Run on iOS
+# Start Expo dev server (choose platform)
+npm start
 
-# Not yet configured:
-# npm run type-check    # (TypeScript not setup)
-# npm test              # (Jest not setup)
-# npm run lint          # (ESLint not setup)
+# Run on Android
+npm run android
+
+# Run on iOS
+npm run ios
+
+# Run on web
+npm run web
+
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm test:watch
 ```
 
 ## Project Conventions
 
-### When Building This Project
+### File Structure
 
-1. **Incremental Setup** - Don't assume infrastructure exists. Build it step by step:
-   ```
-   Phase 0: ✅ Planning complete
-   Phase 1: Configure TypeScript, ESLint, directory structure
-   Phase 2: Install & configure database layer
-   Phase 3: Set up navigation & routing
-   Phase 4: Implement features
-   ```
+When working with this project, follow this directory layout:
 
-2. **Check Before Using** - Before importing or using:
-   - Verify package exists in `package.json`
-   - Verify directory/file exists
-   - Verify configuration is complete
-   - If missing: create/install first, then use
-
-3. **File Structure** - When creating `src/`, follow this layout:
-   ```
-   src/
-   ├── app/              # Expo Router pages
-   ├── features/         # Feature modules
-   ├── shared/           # Shared components/utils
-   ├── db/              # Database layer
-   └── theme/           # Design system
-   ```
-
-4. **Naming Conventions**:
-   - **Files**: PascalCase for components (`Button.tsx`), camelCase for utils (`formatDate.ts`)
-   - **Directories**: kebab-case (`user-settings/`)
-   - **Components**: PascalCase (`<LogButton />`)
-   - **Functions**: camelCase (`getUserLogs()`)
-
-### Code Quality
-
-1. **TypeScript**:
-   - Use strict mode once configured
-   - Define explicit types for all props and functions
-   - Avoid `any`, use `unknown` if type is truly unknown
-   - Export types alongside implementation
-
-2. **React Native Best Practices**:
-   - Use `StyleSheet.create()` for styles
-   - Functional components only (no class components)
-   - Use React hooks (`useState`, `useEffect`, `useCallback`, `useMemo`)
-   - Add `accessibilityLabel` to interactive elements
-   - Test on both iOS and Android
-
-3. **Error Handling**:
-   - Use try-catch for async operations
-   - Show user-friendly error messages
-   - Log errors for debugging
-   - Gracefully degrade functionality
-
-4. **Comments**:
-   - Write self-documenting code with clear naming
-   - Use JSDoc for complex functions/components
-   - Inline comments for complex logic only
-   - Avoid obvious comments
-
-5. **Flexibility**:
-   - Backwards compatibility is acceptable when needed
-   - Fallbacks are acceptable for resilience
-   - Pragmatic solutions over perfect architecture
-   - Ship working code, iterate later
-
-### Testing Strategy (Once Configured)
-
-```typescript
-// Test file location
-// Option 1: Co-located
-src/features/cigarettes/LogButton.test.tsx
-
-// Option 2: Separate
-__tests__/features/cigarettes/LogButton.test.tsx
+```
+src/
+├── app/              # Expo Router pages (screens)
+├── db/              # Database layer (schema, initialization)
+├── services/        # Business logic (CRUD, calculations)
+├── stores/          # Zustand state management
+├── utils/           # Utility functions and helpers
+└── types/           # TypeScript type definitions
 ```
 
-**Test Coverage Goals**: >80% for critical paths
+### Naming Conventions
 
-## Architecture Principles (For Implementation)
+- **Component Files**: PascalCase (`Button.tsx`, `LogList.tsx`)
+- **Utility/Service Files**: camelCase (`dateUtils.ts`, `logService.ts`)
+- **Directories**: kebab-case (`user-settings/`, `log-management/`)
+- **React Components**: PascalCase (`<LogButton />`, `<SettingsScreen />`)
+- **Functions & Variables**: camelCase (`getUserLogs()`, `isValidLog`)
+- **Constants**: UPPER_SNAKE_CASE (`MAX_LOGS = 1000`)
 
-1. **Offline-First**: All data local by default, cloud sync optional
-2. **Feature-Sliced**: Group by domain, not by type
-3. **Type-Safe**: Full TypeScript coverage
-4. **Mobile-Optimized**: 60fps target, <100MB memory
-5. **Privacy-First**: User owns their data, no tracking
+### Code Quality Standards
+
+#### TypeScript
+- Use strict mode (enforced by tsconfig.json)
+- Define explicit types for all props and function parameters
+- Export types alongside implementation
+- Avoid `any`, use `unknown` if type is genuinely unknown
+- Use discriminated unions for complex state
+
+#### React Native Best Practices
+- Use `StyleSheet.create()` for all styles (not inline objects)
+- Functional components only (no class components)
+- Use React hooks: `useState`, `useEffect`, `useCallback`, `useMemo`
+- Add `accessibilityLabel` to interactive elements for screen readers
+- Test changes on both iOS and Android simulators
+
+#### Error Handling
+- Use try-catch for all async operations
+- Show user-friendly error messages via `Alert.alert()`
+- Log errors to console for debugging
+- Gracefully degrade functionality when operations fail
+
+#### Comments & Documentation
+- Write self-documenting code with clear names
+- Use JSDoc for complex functions and components
+- Inline comments only for non-obvious logic
+- Avoid commenting the obvious
+
+#### Pragmatism Over Perfection
+- Backwards compatibility is acceptable when needed
+- Fallbacks are acceptable for resilience
+- Pragmatic solutions beat perfect architecture
+- Ship working code, iterate and refine later
+
+### Testing Strategy
+
+**Test File Locations** (choose one approach):
+```typescript
+// Option 1: Co-located with code
+src/services/logService.test.ts
+
+// Option 2: Separate directory
+__tests__/services/logService.test.ts
+```
+
+**Coverage Goals**: >80% for critical paths (services, utilities)
+
+## Architecture Principles
+
+These principles guide all implementation decisions:
+
+1. **Offline-First**: All data stored locally in SQLite by default. Cloud sync is optional future enhancement.
+2. **Type-Safe**: Full TypeScript coverage with strict mode. No `any` types.
+3. **Mobile-Optimized**: Target 60fps rendering, keep memory under 100MB.
+4. **Privacy-First**: User owns their data. No tracking, analytics, or cloud required.
+5. **Feature-Sliced Design**: Organize code by domain/feature, not by type. Group related db, services, components together.
 
 ## Git Workflow
 
-```bash
-# Branch naming
-feature/cigarette-logging
-bugfix/stats-calculation
-refactor/database-layer
+### Branch Naming
+```
+feature/cigarette-logging      # New feature
+bugfix/stats-calculation       # Bug fix
+refactor/database-layer        # Code refactoring
+docs/readme-update             # Documentation
+chore/upgrade-dependencies     # Maintenance
+```
 
-# Commit messages (Conventional Commits)
-feat(cigarettes): add logging modal
+### Commit Messages (Conventional Commits)
+```
+feat(logs): add cigarette logging modal
 fix(stats): correct daily count calculation
 docs(readme): update setup instructions
 chore(deps): upgrade expo to 54.0.15
+refactor(db): simplify schema initialization
 ```
+
+**Format**: `type(scope): brief description`
 
 ## Common Tasks
 
 ### Adding a New Dependency
 
 ```bash
-# Use npx expo install for Expo SDK packages
-npx expo install expo-sqlite
+# For Expo SDK packages, use expo install
+npx expo install expo-notifications
 
-# Use npm install for other packages
-npm install zustand
+# For npm packages, use npm install
+npm install some-library
 ```
 
-### Creating a New Component
+### Creating a New Service
 
-1. Check if infrastructure exists (src/, TypeScript, etc.)
-2. If not, set up infrastructure first
-3. Create component with proper structure:
-   ```typescript
-   import { View, Text, StyleSheet } from 'react-native';
+1. Create file: `src/services/myService.ts`
+2. Define TypeScript interface for operations
+3. Implement static methods for CRUD operations
+4. Integrate with Zustand store for state updates
+5. Add error handling with try-catch
 
-   interface ButtonProps {
-     title: string;
-     onPress: () => void;
-   }
+Example structure:
+```typescript
+import { MyType } from '../types';
+import { myStore } from '../stores/myStore';
+import { db } from '../db';
 
-   export function Button({ title, onPress }: ButtonProps) {
-     return (
-       <View style={styles.container}>
-         <Text>{title}</Text>
-       </View>
-     );
-   }
+export class MyService {
+  static async loadAll(): Promise<MyType[]> {
+    try {
+      const data = await db.select().from(myTable);
+      myStore.setState({ items: data });
+      return data;
+    } catch (error) {
+      throw new Error(`Failed to load: ${error}`);
+    }
+  }
 
-   const styles = StyleSheet.create({
-     container: { padding: 12 },
-   });
-   ```
+  static async create(input: Partial<MyType>): Promise<MyType> {
+    try {
+      const result = await db.insert(myTable).values(input);
+      // Update store
+      myStore.setState(state => ({
+        items: [...state.items, result]
+      }));
+      return result;
+    } catch (error) {
+      throw new Error(`Failed to create: ${error}`);
+    }
+  }
+}
+```
 
-### Setting Up Database
+### Creating a New Screen
 
-1. Install dependencies: `npx expo install expo-sqlite`
-2. Install Drizzle: `npm install drizzle-orm drizzle-kit`
-3. Create `src/db/` structure
-4. Define schemas in `src/db/schema/`
-5. Create migrations
-6. Initialize database client
+1. Create file: `src/app/myscreen.tsx`
+2. Import React Native components and hooks
+3. Define TypeScript interface for navigation params
+4. Use `useLogStore` / `useSettingsStore` to access state
+5. Implement business logic in handlers
+6. Use `StyleSheet.create()` for all styles
+
+Example structure:
+```typescript
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { useLogStore } from '../stores/logStore';
+
+export default function MyScreen() {
+  const router = useRouter();
+  const logs = useLogStore((state) => state.logs);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAction = async () => {
+    try {
+      setIsLoading(true);
+      // Do something
+    } catch (error) {
+      // Handle error
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* Content */}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+});
+```
+
+### Adding Database Schema
+
+1. Edit `src/db/schema.ts` to define new tables
+2. Update Drizzle schema with proper types
+3. Update TypeScript interfaces in `src/types/index.ts`
+4. Create service to handle CRUD operations
+5. Update initialization in `src/db/index.ts` if needed
+
+### Running the App
+
+```bash
+# Start dev server
+npm start
+
+# Choose platform:
+# - Press 'a' for Android
+# - Press 'i' for iOS
+# - Press 'w' for web
+
+# Or run specific platform directly:
+npm run android
+npm run ios
+npm run web
+```
 
 ## Resources
 
 - [Expo Documentation](https://docs.expo.dev)
 - [React Native Docs](https://reactnative.dev)
 - [Drizzle ORM](https://orm.drizzle.team)
-- [Project Specs](./docs/TECHNICAL_SPECIFICATION.md)
-
-## For Claude
-
-**Current Phase**: Pre-Development Setup
-**Next Steps**: Configure TypeScript, ESLint, directory structure
-**Remember**: Infrastructure doesn't exist yet - build it incrementally and verify before using.
-
-When user asks to implement features, first check what infrastructure is missing and offer to set it up.
+- [Zustand](https://github.com/pmndrs/zustand)
+- [Project Technical Specification](./docs/TECHNICAL_SPECIFICATION.md)
+- [Implementation Progress](./IMPLEMENTATION_PROGRESS.md)
