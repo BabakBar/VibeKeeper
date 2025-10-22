@@ -23,6 +23,21 @@
       "Bash(git log:*)",
       "Bash(rg:*)",
       "Bash(fd:*)",
+      "Bash(bat:*)",
+      "Bash(eza:*)",
+      "Bash(jq:*)",
+      "Bash(yq:*)",
+      "Bash(sd:*)",
+      "Bash(xsv:*)",
+      "Bash(delta:*)",
+      "Bash(duf:*)",
+      "Bash(dust:*)",
+      "Bash(fzf:*)",
+      "Bash(broot:*)",
+      "Bash(httpie:*)",
+      "Bash(bottom:*)",
+      "Bash(zoxide:*)",
+      "Bash(miller:*)",
       "Bash(ls:*)",
       "Bash(cat:*)",
       "Bash(mkdir:*)",
@@ -44,7 +59,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 .claude/hooks/tool_validator.py",
+            "command": "py .claude/hooks/tool_validator.py",
             "timeout": 5
           }
         ]

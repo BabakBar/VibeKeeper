@@ -43,9 +43,10 @@ Used by `/task` for complex multi-file changes:
 
 ## 🪝 Hooks (1 Helper)
 
-- **tool_validator.py** - Suggests modern CLI tools (rg, fd), Expo best practices
+- **tool_validator.py** - Suggests modern CLI tools (rg, fd, bat, jq, etc.), Expo best practices
   - **Non-blocking** - suggestions only, never prevents work
   - **No external dependencies** - uses `python3` directly
+  - **See `.claude/TOOLS.md`** for complete tool inventory
 
 ## 📁 Structure
 
@@ -70,6 +71,7 @@ Used by `/task` for complex multi-file changes:
 ├── hooks/                     # Tool suggestions (1)
 │   └── tool_validator.py
 ├── settings.json              # Permissions & MCP config
+├── TOOLS.md                   # Available CLI tools & preferences
 └── README.md                  # This file
 
 Root:
@@ -199,6 +201,8 @@ Edit `.claude/hooks/tool_validator.py`. Receives JSON on stdin:
 }
 ```
 
+**Configuration**: Uses `py` (not `python3`) for Windows compatibility.
+
 **Must exit 0** to allow operation, exit non-zero to block.
 
 ## 💡 Best Practices
@@ -225,7 +229,8 @@ Edit `.claude/hooks/tool_validator.py`. Receives JSON on stdin:
 ### Using Hooks
 
 - Hooks suggest improvements (non-blocking)
-- Suggestions for modern tools (rg > grep, fd > find)
+- Suggestions for modern tools (rg > grep, fd > find, bat > cat, etc.)
+- See `.claude/TOOLS.md` for complete list of installed tools and their usage
 - Warns about Expo best practices
 
 ## 🎯 Example Workflows

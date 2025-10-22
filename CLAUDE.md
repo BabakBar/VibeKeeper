@@ -43,6 +43,20 @@ npm test
 npm test:watch
 ```
 
+## Development Tools
+
+This project uses modern CLI tools for better developer experience. See [.claude/TOOLS.md](.claude/TOOLS.md) for:
+
+- **Search**: `rg` (ripgrep) instead of grep
+- **Finding**: `fd` instead of find
+- **Viewing**: `bat` instead of cat
+- **Listing**: `eza` instead of ls
+- **Data processing**: `jq`, `yq`, `xsv`
+- **Git diffs**: `delta` for syntax-highlighted diffs
+- And 8+ other modern tools (httpie, fzf, duf, dust, etc.)
+
+Claude will automatically suggest these tools when appropriate via the tool validator hook.
+
 ## Project Conventions
 
 ### File Structure
