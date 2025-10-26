@@ -174,25 +174,66 @@ VibeKeeper/
 - Ready to test on Android Expo Go, iOS, and web browser
 - MVP Foundation is solid and ready for enhancement
 
-## Recent Changes (2025-10-22)
+## Recent Changes
 
-### Web Platform - WORKING ✅
+### 2025-10-26 - Runtime Fixes & Testing ✅
+
+**Status:** App working on Android + Web
+
+**Issues Fixed:**
+1. **Dependency Resolution**
+   - Fixed React version conflicts (React 19.1.0 with Expo SDK 54)
+   - Used `npx expo install --fix` + `--legacy-peer-deps`
+   - Result: 16/17 expo-doctor checks passing
+
+2. **Navigation Errors**
+   - Removed nested NavigationContainer (Expo Router provides it)
+   - Fixed `useSearchParams()` → `useLocalSearchParams()`
+   - File: `src/app/_layout.tsx`, `src/app/logs.tsx`
+
+3. **Database NOT NULL Constraints**
+   - Fixed field naming: snake_case → camelCase to match Drizzle schema
+   - Files: `src/services/logService.ts`, `src/services/settingsService.ts`
+   - Removed all `as any` casts (7 instances)
+
+4. **Type Safety Issues**
+   - Fixed optional chaining in settings screen
+   - Used nullish coalescing (`??`) for proper defaults
+   - File: `src/app/settings.tsx`
+
+5. **Cross-Platform Compatibility**
+   - Removed Node.js `crypto` module (iOS/Android incompatible)
+   - Implemented platform-agnostic ID generation
+   - File: `src/services/logService.ts`
+
+**Platform Status:**
+- ✅ Android (Expo Go): Working
+- ✅ Web: Working
+- ✅ iOS: Ready to test
+
+**Approach Changed:**
+- Adopted incremental validation (test each layer before moving to next)
+- Fixed DB → Services → Screens in sequence
+- Added type safety by removing `as any`
+
+### 2025-10-22 - Web Platform Setup ✅
+
 - Added web support with conditional database initialization
 - Fixed platform compatibility issues (SQLite vs web)
 - Created metro.config.js to fix zustand ESM/CommonJS conflict
 - Fixed Expo Router bootstrap order (index.js → App.js → _layout.tsx)
-- Added NavigationContainer with DefaultTheme for web
-- Web platform now loads landing page successfully
+- Removed duplicate NavigationContainer
+- Web platform now loads successfully
 
-### Mobile Platform - IN PROGRESS ⏳
-- Fixed most bundling errors
-- Expo Go connection pending (device testing)
-- All code compiled successfully
+### Documentation Updates
 
-### Documentation
-- Refactored CLAUDE.md to be independent of progress tracking
+**2025-10-26:**
+- Consolidated ERROR_LOG.md + ERROR_LOG_2.md → TROUBLESHOOTING.md
+- Cleaned up docs folder structure (11 files → focused set)
+- Updated IMPLEMENTATION_PROGRESS.md with systematic testing approach
+
+**2025-10-22:**
 - Created docs/ERROR_LOG.md with comprehensive troubleshooting guide
-  - 9 major errors documented with solutions
-  - Dependency installation summary
-  - Architecture patterns and best practices
-  - Debugging techniques
+- 9 major errors documented with solutions
+- Dependency installation summary
+- Architecture patterns and best practices

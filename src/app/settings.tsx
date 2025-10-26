@@ -17,22 +17,22 @@ export default function SettingsScreen() {
   const router = useRouter();
   const settings = useSettingsStore((state) => state.settings);
   const [costPerCigarette, setCostPerCigarette] = useState(
-    settings?.costPerCigarette.toString() || '0.5'
+    (settings?.costPerCigarette ?? 0.5).toString()
   );
   const [currencySymbol, setCurrencySymbol] = useState(
-    settings?.currencySymbol || '$'
+    settings?.currencySymbol ?? '$'
   );
   const [dailyGoal, setDailyGoal] = useState(
-    settings?.dailyGoal?.toString() || ''
+    settings?.dailyGoal?.toString() ?? ''
   );
   const [isLoading, setIsLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
       if (settings) {
-        setCostPerCigarette(settings.costPerCigarette.toString());
-        setCurrencySymbol(settings.currencySymbol);
-        setDailyGoal(settings.dailyGoal?.toString() || '');
+        setCostPerCigarette((settings.costPerCigarette ?? 0.5).toString());
+        setCurrencySymbol(settings.currencySymbol ?? '$');
+        setDailyGoal(settings.dailyGoal?.toString() ?? '');
       }
     }, [settings])
   );

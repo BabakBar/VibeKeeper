@@ -22,7 +22,7 @@ export class SettingsService {
         .select()
         .from(settingsTable)
         .where(eq(settingsTable.id, SETTINGS_ID))
-        .all() as any[];
+        .all();
 
       // If no settings exist, create default ones
       if (!settings || settings.length === 0) {
@@ -58,19 +58,19 @@ export class SettingsService {
 
     await db.insert(settingsTable).values({
       id: SETTINGS_ID,
-      cost_per_cigarette: 0.5,
-      currency_symbol: '$',
-      daily_goal: null,
-      notifications_enabled: 1,
-      created_at: now,
-      updated_at: now,
-    } as any);
+      costPerCigarette: 0.5,
+      currencySymbol: '$',
+      dailyGoal: null,
+      notificationsEnabled: 1,
+      createdAt: now,
+      updatedAt: now,
+    });
 
     return db
       .select()
       .from(settingsTable)
       .where(eq(settingsTable.id, SETTINGS_ID))
-      .all() as Promise<any[]>;
+      .all();
   }
 
   /**
@@ -88,12 +88,12 @@ export class SettingsService {
       await db
         .update(settingsTable)
         .set({
-          cost_per_cigarette: updates.costPerCigarette,
-          currency_symbol: updates.currencySymbol,
-          daily_goal: updates.dailyGoal || null,
-          notifications_enabled: updates.notificationsEnabled ? 1 : 0,
-          updated_at: now,
-        } as any)
+          costPerCigarette: updates.costPerCigarette,
+          currencySymbol: updates.currencySymbol,
+          dailyGoal: updates.dailyGoal || null,
+          notificationsEnabled: updates.notificationsEnabled ? 1 : 0,
+          updatedAt: now,
+        })
         .where(eq(settingsTable.id, SETTINGS_ID))
         .run();
 
@@ -102,7 +102,7 @@ export class SettingsService {
         .select()
         .from(settingsTable)
         .where(eq(settingsTable.id, SETTINGS_ID))
-        .all() as any[];
+        .all();
 
       const formattedSettings: Settings = {
         id: result[0].id,
@@ -150,12 +150,12 @@ export class SettingsService {
     await db
       .update(settingsTable)
       .set({
-        cost_per_cigarette: 0.5,
-        currency_symbol: '$',
-        daily_goal: null,
-        notifications_enabled: 1,
-        updated_at: now,
-      } as any)
+        costPerCigarette: 0.5,
+        currencySymbol: '$',
+        dailyGoal: null,
+        notificationsEnabled: 1,
+        updatedAt: now,
+      })
       .where(eq(settingsTable.id, SETTINGS_ID))
       .run();
 

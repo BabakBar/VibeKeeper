@@ -8,7 +8,7 @@ import {
   Modal,
   StyleSheet,
 } from 'react-native';
-import { useRouter, useSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useLogStore } from '../stores/logStore';
@@ -17,7 +17,7 @@ import { formatDate, formatTime, getRelativeTime } from '../utils/dateUtils';
 
 export default function LogsScreen() {
   const router = useRouter();
-  const params = useSearchParams();
+  const params = useLocalSearchParams<{ mode?: string }>();
   const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
   const [showAddModal, setShowAddModal] = useState(params.mode === 'add');
   const [notes, setNotes] = useState('');

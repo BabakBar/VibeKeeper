@@ -3,7 +3,6 @@ import { cigaretteLogs } from '../db/schema';
 import { useLogStore } from '../stores/logStore';
 import { CigaretteLog as ILogType } from '../types';
 import { eq } from 'drizzle-orm';
-import * as crypto from 'crypto';
 
 /**
  * LogService handles all cigarette log operations
@@ -21,7 +20,7 @@ export class LogService {
         .select()
         .from(cigaretteLogs)
         .orderBy(cigaretteLogs.timestamp)
-        .all() as any[];
+        .all();
 
       // Convert database format to app format
       const formattedLogs: ILogType[] = logs.map((log) => ({
@@ -55,7 +54,8 @@ export class LogService {
     try {
       useLogStore.setState({ isLoading: true, error: null });
 
-      const id = crypto.randomUUID?.() || `log_${Date.now()}_${Math.random()}`;
+      // Generate unique ID using timestamp + random
+      const id = `log_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
       const now = Date.now();
 
       const newLog: ILogType = {
@@ -73,9 +73,9 @@ export class LogService {
         timestamp: newLog.timestamp,
         notes: newLog.notes || null,
         time: newLog.time || null,
-        created_at: now,
-        updated_at: now,
-      } as any);
+        createdAt: now,
+        updatedAt: now,
+      });
 
       // Update store
       useLogStore.getState().addLog(newLog);
@@ -108,8 +108,8 @@ export class LogService {
           timestamp: updates.timestamp,
           notes: updates.notes || null,
           time: updates.time || null,
-          updated_at: now,
-        } as any)
+          updatedAt: now,
+        })
         .where(eq(cigaretteLogs.id, id))
         .run();
 
