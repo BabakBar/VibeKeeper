@@ -7,8 +7,15 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --testMatch='**/__tests__/unit/**/*.test.ts(x)?' --testMatch='**/__tests__/screens/**/*.test.tsx'",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:integration": "jest --testMatch='**/__tests__/integration/**/*.test.ts' --testPathIgnorePatterns='services.test' --runInBand",
+    "test:integration:services": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.integration.js",
+    "build:e2e:ios": "detox build --configuration ios.sim.debug",
+    "test:e2e:ios": "detox test --configuration ios.sim.debug",
+    "build:e2e:android": "detox build --configuration android.emu.debug",
+    "test:e2e:android": "detox test --configuration android.emu.debug"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -39,7 +46,10 @@
   "devDependencies": {
     "@testing-library/react-native": "^12.4.0",
     "@types/react": "~19.1.10",
+    "detox": "^20.14.0",
+    "detox-expo-helpers": "^0.6.0",
     "jest": "^29.7.0",
+    "jest-expo": "^51.0.0",
     "react-test-renderer": "19.1.0",
     "ts-node": "^10.9.0",
     "typescript": "^5.2.0"

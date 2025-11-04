@@ -44,7 +44,9 @@
       "Bash(mv:*)",
       "Bash(cp:*)",
       "Bash(chmod:*)",
-      "Bash(npx expo install:*)"
+      "Bash(npx expo install:*)",
+      "WebSearch",
+      "Bash(timeout 10 npm run test:integration:services:*)"
     ],
     "deny": []
   },

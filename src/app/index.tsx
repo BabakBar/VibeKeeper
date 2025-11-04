@@ -24,13 +24,7 @@ export default function HomeScreen() {
   const logs = useLogStore((state) => state.logs);
   const settings = useSettingsStore((state) => state.settings);
 
-  useFocusEffect(
-    useCallback(() => {
-      updateStats();
-    }, [logs])
-  );
-
-  const updateStats = () => {
+  const updateStats = useCallback(() => {
     const today = formatDate(new Date());
     const todayStats = StatisticsService.getDailyStats(today);
     setTodayStats(todayStats);
@@ -42,7 +36,13 @@ export default function HomeScreen() {
       .sort((a, b) => b.timestamp - a.timestamp)
       .slice(0, 5);
     setRecentLogs(sortedLogs);
-  };
+  }, [logs]);
+
+  useFocusEffect(
+    useCallback(() => {
+      updateStats();
+    }, [updateStats])
+  );
 
   const handleQuickAdd = async () => {
     try {
