@@ -58,8 +58,8 @@ export class SettingsService {
 
     await db.insert(settingsTable).values({
       id: SETTINGS_ID,
-      costPerCigarette: 0.5,
-      currencySymbol: '$',
+      costPerCigarette: 7.5,
+      currencySymbol: '€',
       dailyGoal: null,
       notificationsEnabled: 1,
       createdAt: now,
@@ -150,8 +150,8 @@ export class SettingsService {
     await db
       .update(settingsTable)
       .set({
-        costPerCigarette: 0.5,
-        currencySymbol: '$',
+        costPerCigarette: 7.5,
+        currencySymbol: '€',
         dailyGoal: null,
         notificationsEnabled: 1,
         updatedAt: now,
