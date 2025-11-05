@@ -3,44 +3,64 @@ import { cigaretteLogs } from '../db/schema';
 import { useLogStore } from '../stores/logStore';
 import { CigaretteLog as ILogType } from '../types';
 import { eq } from 'drizzle-orm';
+import { logger, measureAsync } from '../utils/logger';
+import { DatabaseError, NotFoundError, ValidationError } from '../utils/errors';
 
 /**
  * LogService handles all cigarette log operations
+ * Integrated with production-grade logging and error tracking
  */
 export class LogService {
   /**
    * Load all logs from database
    */
   static async loadLogs(): Promise<ILogType[]> {
-    try {
-      useLogStore.setState({ isLoading: true, error: null });
+    return measureAsync('LogService.loadLogs', async () => {
+      try {
+        logger.info('Loading all cigarette logs', { service: 'LogService' });
+        useLogStore.setState({ isLoading: true, error: null });
 
-      // Query all logs sorted by timestamp descending
-      const logs = await db
-        .select()
-        .from(cigaretteLogs)
-        .orderBy(cigaretteLogs.timestamp)
-        .all();
+        // Query all logs sorted by timestamp descending
+        const logs = await db
+          .select()
+          .from(cigaretteLogs)
+          .orderBy(cigaretteLogs.timestamp)
+          .all();
 
-      // Convert database format to app format
-      const formattedLogs: ILogType[] = logs.map((log) => ({
-        id: log.id,
-        timestamp: log.timestamp,
-        notes: log.notes || undefined,
-        time: log.time || undefined,
-        createdAt: log.created_at,
-        updatedAt: log.updated_at,
-      }));
+        logger.debug('Logs fetched from database', {
+          service: 'LogService',
+          count: logs.length
+        });
 
-      useLogStore.setState({ logs: formattedLogs });
-      return formattedLogs;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to load logs';
-      useLogStore.setState({ error: errorMessage });
-      throw error;
-    } finally {
-      useLogStore.setState({ isLoading: false });
-    }
+        // Convert database format to app format
+        const formattedLogs: ILogType[] = logs.map((log) => ({
+          id: log.id,
+          timestamp: log.timestamp,
+          notes: log.notes || undefined,
+          time: log.time || undefined,
+          createdAt: log.created_at,
+          updatedAt: log.updated_at,
+        }));
+
+        useLogStore.setState({ logs: formattedLogs });
+        logger.info('Logs loaded successfully', {
+          service: 'LogService',
+          count: formattedLogs.length
+        });
+
+        return formattedLogs;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to load logs';
+        logger.error('Failed to load logs', { service: 'LogService' }, error as Error);
+        useLogStore.setState({ error: errorMessage });
+        throw new DatabaseError('Failed to load cigarette logs', {
+          operation: 'loadLogs',
+          originalError: errorMessage
+        });
+      } finally {
+        useLogStore.setState({ isLoading: false });
+      }
+    });
   }
 
   /**
@@ -51,42 +71,60 @@ export class LogService {
     notes?: string;
     time?: string;
   }): Promise<ILogType> {
-    try {
-      useLogStore.setState({ isLoading: true, error: null });
+    return measureAsync('LogService.addLog', async () => {
+      try {
+        logger.info('Adding new cigarette log', {
+          service: 'LogService',
+          hasNotes: !!input.notes,
+          hasCustomTime: !!input.time
+        });
+        useLogStore.setState({ isLoading: true, error: null });
 
-      // Generate unique ID using timestamp + random
-      const id = `log_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-      const now = Date.now();
+        // Generate unique ID using timestamp + random
+        const id = `log_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+        const now = Date.now();
 
-      const newLog: ILogType = {
-        id,
-        timestamp: input.timestamp || now,
-        notes: input.notes,
-        time: input.time,
-        createdAt: now,
-        updatedAt: now,
-      };
+        const newLog: ILogType = {
+          id,
+          timestamp: input.timestamp || now,
+          notes: input.notes,
+          time: input.time,
+          createdAt: now,
+          updatedAt: now,
+        };
 
-      // Insert into database
-      await db.insert(cigaretteLogs).values({
-        id,
-        timestamp: newLog.timestamp,
-        notes: newLog.notes || null,
-        time: newLog.time || null,
-        createdAt: now,
-        updatedAt: now,
-      });
+        // Insert into database
+        await db.insert(cigaretteLogs).values({
+          id,
+          timestamp: newLog.timestamp,
+          notes: newLog.notes || null,
+          time: newLog.time || null,
+          createdAt: now,
+          updatedAt: now,
+        });
 
-      // Update store
-      useLogStore.getState().addLog(newLog);
-      return newLog;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to add log';
-      useLogStore.setState({ error: errorMessage });
-      throw error;
-    } finally {
-      useLogStore.setState({ isLoading: false });
-    }
+        // Update store
+        useLogStore.getState().addLog(newLog);
+
+        logger.info('Cigarette log added successfully', {
+          service: 'LogService',
+          logId: id
+        });
+
+        return newLog;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to add log';
+        logger.error('Failed to add cigarette log', { service: 'LogService' }, error as Error);
+        useLogStore.setState({ error: errorMessage });
+        throw new DatabaseError('Failed to add cigarette log', {
+          operation: 'addLog',
+          input,
+          originalError: errorMessage
+        });
+      } finally {
+        useLogStore.setState({ isLoading: false });
+      }
+    });
   }
 
   /**
@@ -159,6 +197,7 @@ export class LogService {
    * Quick log - add cigarette with current timestamp
    */
   static async quickLog(): Promise<ILogType> {
+    logger.trackAction('quick_log', 'home', { timestamp: Date.now() });
     return this.addLog({ timestamp: Date.now() });
   }
 

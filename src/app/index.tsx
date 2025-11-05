@@ -14,6 +14,8 @@ import { useSettingsStore } from '../stores/settingsStore';
 import { LogService } from '../services/logService';
 import { StatisticsService } from '../services/statisticsService';
 import { formatDate, formatTime, getRelativeTime } from '../utils/dateUtils';
+import { logger, trackScreen, trackAction } from '../utils/logger';
+import { ErrorHandler } from '../utils/errors';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -25,35 +27,45 @@ export default function HomeScreen() {
   const settings = useSettingsStore((state) => state.settings);
 
   const updateStats = useCallback(() => {
-    const today = formatDate(new Date());
-    const todayStats = StatisticsService.getDailyStats(today);
-    setTodayStats(todayStats);
+    try {
+      const today = formatDate(new Date());
+      const todayStats = StatisticsService.getDailyStats(today);
+      setTodayStats(todayStats);
 
-    const summary = StatisticsService.getSummaryStats();
-    setSummary(summary);
+      const summary = StatisticsService.getSummaryStats();
+      setSummary(summary);
 
-    const sortedLogs = [...logs]
-      .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, 5);
-    setRecentLogs(sortedLogs);
+      const sortedLogs = [...logs]
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, 5);
+      setRecentLogs(sortedLogs);
+    } catch (error) {
+      logger.error('Failed to update stats on home screen', { screen: 'home' }, error as Error);
+    }
   }, [logs]);
 
   useFocusEffect(
     useCallback(() => {
+      trackScreen('home', { logsCount: logs.length });
       updateStats();
-    }, [updateStats])
+    }, [updateStats, logs.length])
   );
 
   const handleQuickAdd = async () => {
     try {
+      trackAction('quick_add_cigarette', 'home');
       await LogService.quickLog();
       updateStats();
+      logger.info('Quick log added from home screen');
     } catch (error) {
-      Alert.alert('Error', 'Failed to log cigarette');
+      const message = ErrorHandler.formatForUser(error);
+      logger.error('Failed to quick log cigarette', { screen: 'home' }, error as Error);
+      Alert.alert('Error', message);
     }
   };
 
   const handleDetailedLog = () => {
+    trackAction('detailed_log_navigation', 'home');
     router.push('/logs?mode=add');
   };
 
