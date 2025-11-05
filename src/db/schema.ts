@@ -19,8 +19,8 @@ export const cigaretteLogs = sqliteTable('cigarette_logs', {
  */
 export const settings = sqliteTable('settings', {
   id: text('id').primaryKey(),
-  costPerCigarette: real('cost_per_cigarette').notNull().default(0.5), // Default $0.50
-  currencySymbol: text('currency_symbol').notNull().default('$'),
+  costPerCigarette: real('cost_per_cigarette').notNull().default(7.5), // Default €7.50
+  currencySymbol: text('currency_symbol').notNull().default('€'),
   dailyGoal: integer('daily_goal'), // Optional daily limit
   notificationsEnabled: integer('notifications_enabled').notNull().default(1), // Boolean as int
   createdAt: integer('created_at').notNull(),

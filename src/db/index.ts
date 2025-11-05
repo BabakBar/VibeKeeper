@@ -56,8 +56,8 @@ export async function initializeDatabase() {
     await database.execAsync(`
       CREATE TABLE IF NOT EXISTS settings (
         id TEXT PRIMARY KEY,
-        cost_per_cigarette REAL NOT NULL DEFAULT 0.5,
-        currency_symbol TEXT NOT NULL DEFAULT '$',
+        cost_per_cigarette REAL NOT NULL DEFAULT 7.5,
+        currency_symbol TEXT NOT NULL DEFAULT '€',
         daily_goal INTEGER,
         notifications_enabled INTEGER NOT NULL DEFAULT 1,
         created_at INTEGER NOT NULL,

@@ -43,12 +43,12 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
 
   getCostPerCigarette: () => {
     const state = get();
-    return state.settings?.costPerCigarette ?? 0.5;
+    return state.settings?.costPerCigarette ?? 7.5;
   },
 
   getCurrencySymbol: () => {
     const state = get();
-    return state.settings?.currencySymbol ?? '$';
+    return state.settings?.currencySymbol ?? '€';
   },
 
   getDailyGoal: () => {

@@ -6,6 +6,7 @@ import {
   Alert,
   TextInput,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
@@ -17,10 +18,10 @@ export default function SettingsScreen() {
   const router = useRouter();
   const settings = useSettingsStore((state) => state.settings);
   const [costPerCigarette, setCostPerCigarette] = useState(
-    (settings?.costPerCigarette ?? 0.5).toString()
+    (settings?.costPerCigarette ?? 7.5).toString()
   );
   const [currencySymbol, setCurrencySymbol] = useState(
-    settings?.currencySymbol ?? '$'
+    settings?.currencySymbol ?? '€'
   );
   const [dailyGoal, setDailyGoal] = useState(
     settings?.dailyGoal?.toString() ?? ''
@@ -30,8 +31,8 @@ export default function SettingsScreen() {
   useFocusEffect(
     useCallback(() => {
       if (settings) {
-        setCostPerCigarette((settings.costPerCigarette ?? 0.5).toString());
-        setCurrencySymbol(settings.currencySymbol ?? '$');
+        setCostPerCigarette((settings.costPerCigarette ?? 7.5).toString());
+        setCurrencySymbol(settings.currencySymbol ?? '€');
         setDailyGoal(settings.dailyGoal?.toString() ?? '');
       }
     }, [settings])
@@ -42,7 +43,7 @@ export default function SettingsScreen() {
       setIsLoading(true);
 
       await SettingsService.updateSettings({
-        costPerCigarette: parseFloat(costPerCigarette) || 0.5,
+        costPerCigarette: parseFloat(costPerCigarette) || 7.5,
         currencySymbol,
         dailyGoal: dailyGoal ? parseInt(dailyGoal) : undefined,
       });
@@ -76,13 +77,14 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Settings</Text>
-      </View>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Settings</Text>
+        </View>
 
-      <ScrollView style={styles.content}>
+        <ScrollView style={styles.content}>
         {/* Pricing Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Pricing</Text>
@@ -91,14 +93,14 @@ export default function SettingsScreen() {
             <Text style={styles.label}>Cost per Cigarette</Text>
             <View style={styles.costRow}>
               <TextInput
-                placeholder="0.50"
+                placeholder="7.50"
                 value={costPerCigarette}
                 onChangeText={setCostPerCigarette}
                 keyboardType="decimal-pad"
                 style={[styles.input, styles.costInput]}
               />
               <TextInput
-                placeholder="$"
+                placeholder="€"
                 value={currencySymbol}
                 onChangeText={setCurrencySymbol}
                 maxLength={1}
@@ -106,8 +108,8 @@ export default function SettingsScreen() {
               />
             </View>
             <Text style={styles.hint}>
-              Example: {currencySymbol || '$'}
-              {parseFloat(costPerCigarette) || 0.5}
+              Example: {currencySymbol || '€'}
+              {parseFloat(costPerCigarette) || 7.5}
             </Text>
           </View>
         </View>
@@ -165,11 +167,16 @@ export default function SettingsScreen() {
           </Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#10b981',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -177,34 +184,36 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: '#10b981',
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingTop: 16,
+    paddingBottom: 20,
   },
   headerTitle: {
     color: '#fff',
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
   },
   content: {
     flex: 1,
-    paddingVertical: 16,
+    paddingVertical: 20,
     paddingHorizontal: 16,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 28,
   },
   sectionTitle: {
     color: '#1f2937',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 20,
     marginBottom: 16,
   },
   formGroup: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
   label: {
     color: '#374151',
     fontWeight: '600',
-    marginBottom: 8,
+    fontSize: 16,
+    marginBottom: 10,
   },
   costRow: {
     flexDirection: 'row',
@@ -214,21 +223,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#d1d5db',
     borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     backgroundColor: '#f3f4f6',
+    fontSize: 16,
+    minHeight: 44,
   },
   costInput: {
     flex: 1,
   },
   currencyInput: {
-    width: 50,
+    width: 60,
     textAlign: 'center',
   },
   hint: {
     color: '#9ca3af',
-    fontSize: 12,
-    marginTop: 8,
+    fontSize: 14,
+    marginTop: 10,
   },
   infoCard: {
     backgroundColor: '#f3f4f6',
@@ -261,24 +272,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#fee2e2',
     borderWidth: 1,
     borderColor: '#fca5a5',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
     borderRadius: 8,
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   dangerButtonText: {
     color: '#b91c1c',
     fontWeight: '600',
+    fontSize: 16,
   },
   saveButton: {
     backgroundColor: '#10b981',
-    paddingVertical: 12,
+    paddingVertical: 16,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 32,
+    minHeight: 50,
+    justifyContent: 'center',
   },
   saveButtonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,
   },
 });

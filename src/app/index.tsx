@@ -5,6 +5,7 @@ import {
   ScrollView,
   Alert,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
@@ -34,7 +35,7 @@ export default function HomeScreen() {
 
     const sortedLogs = [...logs]
       .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, 5);
+      .slice(0, 3);
     setRecentLogs(sortedLogs);
   }, [logs]);
 
@@ -53,6 +54,26 @@ export default function HomeScreen() {
     }
   };
 
+  const handleDecrement = async () => {
+    try {
+      // Get today's logs sorted by timestamp (most recent first)
+      const today = formatDate(new Date());
+      const todayLogs = LogService.getLogsByDate(today)
+        .sort((a, b) => b.timestamp - a.timestamp);
+
+      if (todayLogs.length === 0) {
+        Alert.alert('No logs', 'No cigarettes logged today to remove');
+        return;
+      }
+
+      // Delete the most recent log from today
+      await LogService.deleteLog(todayLogs[0].id);
+      updateStats();
+    } catch (error) {
+      Alert.alert('Error', 'Failed to remove cigarette');
+    }
+  };
+
   const handleDetailedLog = () => {
     router.push('/logs?mode=add');
   };
@@ -62,9 +83,10 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
         <Text style={styles.headerTitle}>VibeKeeper</Text>
         <Text style={styles.headerSubtitle}>Track your progress</Text>
       </View>
@@ -86,13 +108,30 @@ export default function HomeScreen() {
 
       {/* Quick Action Buttons */}
       <View style={styles.buttonGroup}>
-        <TouchableOpacity
-          onPress={handleQuickAdd}
-          style={styles.primaryButton}
-        >
-          <Text style={styles.buttonText}>Quick Add Cigarette</Text>
-        </TouchableOpacity>
+        {/* Counter Display */}
+        <View style={styles.counterDisplay}>
+          <Text style={styles.counterLabel}>Today</Text>
+          <Text style={styles.counterValue}>{todayStats.total}</Text>
+        </View>
 
+        {/* +/- Buttons Row */}
+        <View style={styles.counterButtonsRow}>
+          <TouchableOpacity
+            onPress={handleDecrement}
+            style={styles.counterButton}
+          >
+            <Text style={styles.counterButtonText}>-</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleQuickAdd}
+            style={[styles.counterButton, styles.counterButtonPlus]}
+          >
+            <Text style={[styles.counterButtonText, styles.counterButtonTextPlus]}>+</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Secondary Action */}
         <TouchableOpacity
           onPress={handleDetailedLog}
           style={styles.secondaryButton}
@@ -154,19 +193,30 @@ export default function HomeScreen() {
 
       {/* Navigation Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => router.push('/logs')}>
+        <TouchableOpacity
+          onPress={() => router.push('/logs')}
+          style={styles.footerButton}
+        >
           <Text style={styles.footerText}>📋 Logs</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push('/settings')}>
+        <TouchableOpacity
+          onPress={() => router.push('/settings')}
+          style={styles.footerButton}
+        >
           <Text style={styles.footerText}>⚙️ Settings</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#ef4444',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -174,7 +224,8 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: '#ef4444',
     paddingHorizontal: 16,
-    paddingVertical: 24,
+    paddingTop: 16,
+    paddingBottom: 24,
   },
   headerTitle: {
     color: '#fff',
@@ -184,7 +235,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     color: '#fecaca',
-    fontSize: 14,
+    fontSize: 16,
   },
   statsCard: {
     marginHorizontal: 16,
@@ -198,6 +249,7 @@ const styles = StyleSheet.create({
   statsTitle: {
     color: '#4b5563',
     fontWeight: '600',
+    fontSize: 16,
     marginBottom: 12,
   },
   statsRow: {
@@ -225,28 +277,64 @@ const styles = StyleSheet.create({
   buttonGroup: {
     marginHorizontal: 16,
     marginTop: 24,
+    gap: 16,
+  },
+  counterDisplay: {
+    backgroundColor: '#f3f4f6',
+    padding: 20,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#e5e7eb',
+  },
+  counterLabel: {
+    fontSize: 16,
+    color: '#6b7280',
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  counterValue: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    color: '#ef4444',
+  },
+  counterButtonsRow: {
+    flexDirection: 'row',
     gap: 12,
   },
-  primaryButton: {
-    backgroundColor: '#ef4444',
-    padding: 16,
-    borderRadius: 8,
+  counterButton: {
+    flex: 1,
+    backgroundColor: '#f3f4f6',
+    padding: 24,
+    borderRadius: 12,
     alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#d1d5db',
+    minHeight: 80,
+  },
+  counterButtonPlus: {
+    backgroundColor: '#ef4444',
+    borderColor: '#dc2626',
+  },
+  counterButtonText: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#1f2937',
+  },
+  counterButtonTextPlus: {
+    color: '#fff',
   },
   secondaryButton: {
     backgroundColor: '#e5e7eb',
-    padding: 16,
+    padding: 14,
     borderRadius: 8,
     alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
   },
   buttonTextSecondary: {
     color: '#1f2937',
     fontWeight: '600',
+    fontSize: 14,
   },
   section: {
     marginHorizontal: 16,
@@ -255,6 +343,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: '#1f2937',
     fontWeight: '600',
+    fontSize: 18,
     marginBottom: 12,
   },
   summaryCard: {
@@ -273,10 +362,12 @@ const styles = StyleSheet.create({
   },
   summaryLabel: {
     color: '#4b5563',
+    fontSize: 15,
   },
   summaryValue: {
     fontWeight: '600',
     color: '#1f2937',
+    fontSize: 15,
   },
   logItem: {
     backgroundColor: '#f3f4f6',
@@ -309,12 +400,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 20,
+    paddingBottom: 24,
     backgroundColor: '#f3f4f6',
-    marginTop: 24,
+    marginTop: 32,
+    gap: 16,
+  },
+  footerButton: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginHorizontal: 8,
+    minHeight: 44,
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
   },
   footerText: {
     color: '#1f2937',
     fontWeight: '600',
+    fontSize: 16,
   },
 });
